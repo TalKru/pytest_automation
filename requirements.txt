@@ -17,5 +17,6 @@ packaging==24.1             # Parsing and comparing package versions
 pillow==11.0.0              # Image processing for automation
 PyYAML==6.0.2               # Parsing YAML configurations
 pytest-dependency==0.6.0    # dependency markers, skip tests that depend on failed tests
+pytest-html==4.1.1          # use in bash: pytest --html=report.html
 
 

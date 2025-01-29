@@ -15,6 +15,7 @@ project_root/
 ├── data/                 # Test data (e.g., CSV, JSON files)
 │   └── test_data.csv
 ├── reports/              # Test reports (e.g., HTML reports)
+├── screenshots/ 
 ├── requirements.txt      # Project dependencies
 ├── pytest.ini            # Pytest configuration
 ├── README.md             # Project documentation
