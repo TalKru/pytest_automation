@@ -38,3 +38,69 @@ requirements.txt: This file lists all the project's dependencies (e.g., selenium
 pip install -r requirements.txt.
 pytest.ini: This file contains Pytest configuration settings, such as markers, plugins, and report format.
 README.md: This file provides a description of the project and instructions on how to run the tests.
+
+
+Explanation of Key Libraries
+pytest
+The main testing framework for writing and running tests.
+
+pytest-html
+Generates detailed HTML reports for your test runs.
+
+pytest-xdist
+Enables parallel test execution, speeding up large test suites.
+
+pytest-rerunfailures
+Reruns failed tests automatically to handle flakiness in test environments.
+
+pytest-mock
+Simplifies mocking objects and functions in your tests.
+
+selenium
+For browser automation, commonly used with UI testing.
+
+requests
+Helpful for testing APIs or integrating web-based operations.
+
+jsonschema
+For validating JSON responses from APIs against expected schemas.
+
+webdriver-manager
+Automatically downloads and configures browser drivers for Selenium.
+
+pandas
+Useful for handling test data in CSV, Excel, or other structured formats.
+
+Faker
+Generates fake data for testing (e.g., names, addresses, emails).
+
+loguru
+Adds better logging capabilities, making it easier to debug your tests.
+
+========================================================[NOTES]========================================================
+to skip a test, use a marker:
+[ @pytest.mark.skip ]
+========================================================[NOTES]========================================================
+when creating a fixture, set the scope accordingly to the needs and lifecycle, the default scope is "function"
+[ @pytest.fixture(scope="function") ]
+
+The scope="module" argument means the fixture will run only once per module (file), 
+not for every test function. Other scopes include:
+"function" (default): Runs for each test function.
+"class": Runs once per test class.
+"package": Runs once per package of tests.
+"session": Runs once per test session.
+========================================================[NOTES]========================================================
+parallel execution capabilities (via the pytest-xdist plugin)
+install: [ pip install pytest-xdist ]
+Run:     [ pytest -n NUM ... ] (where NUM is the number of parallel processes you want to use). 
+For example, pytest -n 4 will run your tests using 4 processes.
+========================================================[NOTES]========================================================
+
+========================================================[NOTES]========================================================
+
+========================================================[NOTES]========================================================
+
+========================================================[NOTES]========================================================
+
+========================================================[NOTES]========================================================

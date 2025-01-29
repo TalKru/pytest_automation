@@ -1,0 +1,21 @@
+pytest==8.3.3               # Core testing framework
+pytest-html==3.2.0          # For generating HTML reports
+pytest-xdist==3.6.1         # Parallel test execution
+pytest-rerunfailures==11.1  # Rerun failed tests automatically
+pytest-mock==3.11.1         # Mocking support for pytest
+selenium==4.27.1            # Browser automation library
+requests==2.32.3            # For API testing
+jsonschema==4.19.0          # JSON schema validation
+webdriver-manager==4.3.0    # Auto-handles WebDriver binaries
+pandas==2.2.3               # Data handling in test workflows
+Faker==18.10.0              # Generating fake test data
+loguru==0.7.2               # Advanced logging
+matplotlib==3.9.2           # Visualization for test data (if needed)
+numpy==2.1.3                # Array/matrix operations for data-driven tests
+openpyxl==3.1.5             # Working with Excel test data
+packaging==24.1             # Parsing and comparing package versions
+pillow==11.0.0              # Image processing for automation
+PyYAML==6.0.2               # Parsing YAML configurations
+pytest-dependency==0.6.0    # dependency markers, skip tests that depend on failed tests
+
+
