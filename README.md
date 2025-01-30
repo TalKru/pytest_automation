@@ -97,7 +97,8 @@ install: [ pip install pytest-xdist ]
 Run:     [ pytest -n NUM ... ] (where NUM is the number of parallel processes you want to use). 
 For example, pytest -n 4 will run your tests using 4 processes.
 ========================================================[NOTES]========================================================
-
+to update new list to the requirements file: 
+# pip freeze > .\requirements.txt
 ========================================================[NOTES]========================================================
 
 ========================================================[NOTES]========================================================

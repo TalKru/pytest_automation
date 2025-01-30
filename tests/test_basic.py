@@ -56,11 +56,8 @@ def test_logo(driver: webdriver, request):
     try:
         driver.get("https://opensource-demo.orangehrmlive.com/")
         xpath = "//div[@class='orangehrm-login-logo']//img[@alt='orangehrm-logo']"
-
-        time.sleep(2)
-
         status = driver.find_element(By.XPATH, xpath).is_displayed()
-        assert status is not True
+        assert status is True
 
     except Exception as e:
         print(f"Error message: {e}")

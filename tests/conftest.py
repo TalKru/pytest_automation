@@ -75,16 +75,16 @@ def pytest_runtest_makereport(item, call):
 
 
 # ============================[modify report metadata]=====================================
-@pytest.mark.optionalhook
+@pytest.hookimpl(optionalhook=True)
 def pytest_metadata(metadata):
-    """ remove data """
+    """ remove data fields from the report opening"""
     metadata.pop("Plugins", None)
     metadata.pop("Platform", None)
     metadata.pop("Python", None)
 
 
 def pytest_configure(config):
-    """ add data fields """
+    """ add meta-data fields to the report opening """
     config.stash[metadata_key]["Project"] = '~~~~@#@#@#@#@~~~~'
     config.stash[metadata_key]["Module"] = '~~~~@#@#@#@#@~~~~'
     config.stash[metadata_key]["Project"] = '~~~~@#@#@#@#@~~~~'
