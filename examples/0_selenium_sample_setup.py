@@ -35,8 +35,9 @@ if __name__ == '__main__':
 
     element = driver.find_element(By.ID, 'start-date')
     element.click()
+    element.clear()
+    element.send_keys("123-ABC")
 
-    ### YOUR CODE
 
     time.sleep(2)
     driver.quit()
