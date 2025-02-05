@@ -1,4 +1,7 @@
 
+# Ignore reports
+*.html
+*.css
 
 # Ignore PyCharm settings
 .idea/

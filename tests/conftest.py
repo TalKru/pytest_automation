@@ -85,9 +85,9 @@ def pytest_metadata(metadata):
 
 def pytest_configure(config):
     """ add meta-data fields to the report opening """
-    config.stash[metadata_key]["Project"] = '~~~~@#@#@#@#@~~~~'
-    config.stash[metadata_key]["Module"] = '~~~~@#@#@#@#@~~~~'
-    config.stash[metadata_key]["Project"] = '~~~~@#@#@#@#@~~~~'
+    config.stash[metadata_key]["TITLE_TEXT_1"] = 'pytest_configure()_EDIT_YOUR_TEXT'
+    config.stash[metadata_key]["TITLE_TEXT_2"] = 'pytest_configure()_EDIT_YOUR_TEXT'
+    config.stash[metadata_key]["TITLE_TEXT_3"] = 'pytest_configure()_EDIT_YOUR_TEXT'
 
 
 def pytest_html_report_title(report):

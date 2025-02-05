@@ -15,7 +15,7 @@ from datetime import datetime
 def test_login(driver: webdriver, wait: WebDriverWait, request):  # Type hints added
     """
     Even with the correct imports, PyCharm sometimes struggles with autocompletion for objects
-    that are passed in as arguments (like driver and wait from the fixtures).
+    that are passed in as arguments (like driver and wait from the coftest fixtures).
 
     Add type hints to your test function arguments.
     This tells PyCharm (and Python's type checker) what type of object driver and wait are.
@@ -44,7 +44,7 @@ def test_login(driver: webdriver, wait: WebDriverWait, request):  # Type hints a
         actual_text = wait.until(EC.presence_of_element_located(
             (By.XPATH, "//p[normalize-space()='Time at Work']"))).text
 
-        assert expected_text in actual_text, f"Expected '{expected_text}' to be in '{actual_text}'"
+        assert expected_text in actual_text
 
     except Exception as e:
         print(f"Error message: {e}")
@@ -52,10 +52,12 @@ def test_login(driver: webdriver, wait: WebDriverWait, request):  # Type hints a
         pytest.fail(f"Test failed: {e}... Screenshot saved at: {screenshot_path}")
 
 
-def test_logo(driver: webdriver, request):
+def test_logo(driver: webdriver, wait: WebDriverWait, request):
     try:
         driver.get("https://opensource-demo.orangehrmlive.com/")
         xpath = "//div[@class='orangehrm-login-logo']//img[@alt='orangehrm-logo']"
+        locate_tuple = (By.XPATH, xpath)
+        wait.until(EC.presence_of_element_located(locate_tuple))
         status = driver.find_element(By.XPATH, xpath).is_displayed()
         assert status is True
 

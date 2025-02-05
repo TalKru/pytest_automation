@@ -88,26 +88,6 @@ def wait(driver, wait_time_sec=10) -> WebDriverWait:
 
 
 #==============================[embed screenshot in html report]=================================
-# https://www.youtube.com/watch?v=e6tL7IudnXY
-@pytest.hookimpl(hookwrapper=True)
-def pytest_runtest_makereport(item, call):
-    now = datetime.now()
-    pytest_html = item.config.pluginmanager.getplugin('html')
-    outcome = yield
-    report = outcome.get_result()
-    extra = getattr(report, 'extra', [])
-    if report.when == 'call' or report.when == "setup":
-        xfail = hasattr(report, 'wasxfail')
-        if (report.skipped and xfail) or (report.failed and not xfail):
-            file_name = report.nodeid.replace("::", "_") + ".png"
-            # file_name = "screenshot" + now.strftime("%S%H%d%m%Y") + ".png"
-            # driver.get_screenshot_as_file(file_name)
-            if file_name:
-                html = '<div><img src="%s" alt="screenshot" style="width:304px;height:228px;" ' \
-                       'onclick="window.open(this.src)" align="right"/></div>' % file_name
-                extra.append(pytest_html.extras.html(html))
-        report.extra = extra
-
 
 # @pytest.hookimpl(tryfirst=True)
 # def pytest_configure(config):
