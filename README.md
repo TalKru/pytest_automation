@@ -98,10 +98,10 @@ Run:     [ pytest -n NUM ... ] (where NUM is the number of parallel processes yo
 For example, pytest -n 4 will run your tests using 4 processes.
 ========================================================[NOTES]========================================================
 If you want to create a requirements.txt file from your currently installed packages, use:
-# pip freeze > .\requirements.txt
+# pip freeze > pytest_automation\requirements.txt
 ========================================================[NOTES]========================================================
 install correctly the modules from requirements.txt
-# pip install --upgrade -r /PATH_TO/requirements.txt
+# pip install --upgrade -r \PATH_TO\requirements.txt
 ========================================================[NOTES]========================================================
 
 ========================================================[NOTES]========================================================

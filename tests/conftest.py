@@ -17,6 +17,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver import ActionChains, Keys
 import time
 from datetime import datetime
+import os
 
 
 @pytest.fixture(scope="function")
@@ -46,22 +47,62 @@ def wait(driver, wait_time_sec=10) -> WebDriverWait:
 # ==============================[embed screenshot in html report]=================================
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
-    now = datetime.now()
+    """
+    Pytest hook that is called after each test phase (setup, call, teardown).
+    This hook attaches a screenshot to the HTML report if a test fails.
+    It assumes that screenshots are saved in the project root folder "screenshots".
+    The relative path from the HTML report (assumed to be in the "reports" folder) to the
+    screenshots folder is "../screenshots".
+    """
+    # Get the pytest-html plugin instance.
     pytest_html = item.config.pluginmanager.getplugin('html')
+
+    # Yield to let the test run and capture its report.
     outcome = yield
     report = outcome.get_result()
+
+    # Retrieve any existing extra information for the report.
     extra = getattr(report, 'extra', [])
-    if report.when == 'call' or report.when == "setup":
+
+    # Process only during the 'call' or 'setup' phase.
+    if report.when in ('call', 'setup'):
         xfail = hasattr(report, 'wasxfail')
-        if (report.skipped and xfail) or (report.failed and not xfail):
-            file_name = report.nodeid.replace("::", "_") + ".png"
-            # file_name = "screenshot" + now.strftime("%S%H%d%m%Y") + ".png"
-            # driver.get_screenshot_as_file(file_name)
-            if file_name:
-                html = '<div><img src="%s" alt="screenshot" style="width:304px;height:228px;" ' \
-                       'onclick="window.open(this.src)" align="right"/></div>' % file_name
-                extra.append(pytest_html.extras.html(html))
-        report.extra = extra
+        # Attach screenshot if test failed (and wasn't expected to fail) or if skipped but expected to fail.
+        if (report.failed and not xfail) or (report.skipped and xfail):
+            # Build the screenshot filename exactly as in capture_screenshot().
+            screenshot_filename = f"{report.nodeid.replace('::', '_').replace('/', '_').replace('\\', '_')}.png"
+            # Define the relative path from the HTML report location (e.g., reports/report.html)
+            # to the screenshots folder at the project root.
+            relative_path = os.path.join("..", "screenshots", screenshot_filename)
+
+            # Create an HTML snippet to embed the screenshot in the report.
+            html = (
+                f'<div><img src="{relative_path}" alt="screenshot" '
+                'style="width:304px;height:228px;" onclick="window.open(this.src)" align="right"/></div>'
+            )
+            extra.append(pytest_html.extras.html(html))
+
+    # Set the extra info back on the report.
+    report.extra = extra
+
+# @pytest.hookimpl(hookwrapper=True)
+# def pytest_runtest_makereport(item, call):
+#     now = datetime.now()
+#     pytest_html = item.config.pluginmanager.getplugin('html')
+#     outcome = yield
+#     report = outcome.get_result()
+#     extra = getattr(report, 'extra', [])
+#     if report.when == 'call' or report.when == "setup":
+#         xfail = hasattr(report, 'wasxfail')
+#         if (report.skipped and xfail) or (report.failed and not xfail):
+#             file_name = report.nodeid.replace("::", "_") + ".png"
+#             # file_name = "screenshot" + now.strftime("%S%H%d%m%Y") + ".png"
+#             # driver.get_screenshot_as_file(file_name)
+#             if file_name:
+#                 html = '<div><img src="%s" alt="screenshot" style="width:304px;height:228px;" ' \
+#                        'onclick="window.open(this.src)" align="right"/></div>' % file_name
+#                 extra.append(pytest_html.extras.html(html))
+#         report.extra = extra
 
 
 # @pytest.hookimpl(tryfirst=True)
