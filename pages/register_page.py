@@ -22,6 +22,8 @@ class RegisterPage:
     btn_continue_xpath = "//input[@value='Continue']"
 
     text_msg_conf_xpath = "//h1[normalize-space()='Your Account Has Been Created!']"
+    text_warning_not_agreed_to_policy_xpath = "//div[@class='alert alert-danger alert-dismissible']"
+    text_err_passwords_mismatch = "//div[@class='text-danger']"
 
     def __init__(self, driver: webdriver, wait: WebDriverWait):
         self.driver = driver  # build the obj with driver obj from the test case
@@ -89,4 +91,23 @@ class RegisterPage:
             print(f"Failed to get confirm account msg: {e}")
             return None
 
+    def get_error_missing_checkbox_agree_policy(self):
+        tup = (By.XPATH, self.text_warning_not_agreed_to_policy_xpath)
+        try:
+            element = self.wait.until(EC.visibility_of_element_located(tup))
+            return element.text
+
+        except Exception as e:
+            print(f"Failed to get missing checkbox agreement msg: {e}")
+            return None
+
+    def get_error_passwords_mismatch(self):
+        tup = (By.XPATH, self.text_err_passwords_mismatch)
+        try:
+            element = self.wait.until(EC.visibility_of_element_located(tup))
+            return element.text
+
+        except Exception as e:
+            print(f"Failed to get passwords mismatch msg: {e}")
+            return None
 

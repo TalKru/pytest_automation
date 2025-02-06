@@ -30,9 +30,8 @@ def capture_screenshot(driver: webdriver, request):
     return screenshot_path  # Return for debugging/logging
 
 
-def generate_random_email() -> str:
-    """Generate a random email address with 5 random digits."""
-    random_number = random.randint(10000, 99999)  # Generates a random 5-digit number
-    # email = f"temp{random_number}@supermail.com"
-    email = "temp" + str(random_number) + "@supermail.com"
+def generate_random_email(min_range=10000, max_range=99999, prefix="temp", suffix="@supermail.com") -> str:
+    """Generate a random email address with random digits."""
+    random_number = random.randint(min_range, max_range)  # Generates a random 5-digit number
+    email = prefix + str(random_number) + suffix
     return email
