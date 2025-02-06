@@ -1,8 +1,11 @@
+# ---------------------------------------------------------------------------------------------------------- #
 import pytest
 from pages.home_page import HomePage          # "HomePage" is a class with all the locators and funcs
 from pages.register_page import RegisterPage  # "RegisterPage" is a class with all the locators and funcs
+# ---------------------------------------------------------------------------------------------------------- #
 from utils.general_utils import generate_random_email
 from utils.general_utils import capture_screenshot
+from utils import read_config_data as DATA
 # ---------------------------------------------------------------------------------------------------------- #
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -11,8 +14,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 import time
 import requests
 
-
-BASE_URL = "https://naveenautomationlabs.com/opencart/"
+#HOME_URL = "https://naveenautomationlabs.com/opencart/"
 
 
 @pytest.mark.repeat(3)  # will run the same test 3 times
@@ -22,7 +24,7 @@ def test_correct_account_registration(driver: webdriver, wait: WebDriverWait, re
         home_page_obj = HomePage(driver, wait)
         register_page_obj = RegisterPage(driver, wait)
 
-        driver.get(BASE_URL)
+        driver.get(DATA.get_home_url())  # read the URL from config.ini file using utils.read_config_data.py module
         home_page_obj.click_my_account()
         home_page_obj.click_register()
 
@@ -57,7 +59,7 @@ def test_missing_agreement_checkbox_error_msg(driver: webdriver, wait: WebDriver
         home_page_obj = HomePage(driver, wait)
         register_page_obj = RegisterPage(driver, wait)
 
-        driver.get(BASE_URL)
+        driver.get(DATA.get_home_url())
         home_page_obj.click_my_account()
         home_page_obj.click_register()
 
@@ -88,7 +90,7 @@ def test_passwords_mismatch_on_registration(driver: webdriver, wait: WebDriverWa
         home_page_obj = HomePage(driver, wait)
         register_page_obj = RegisterPage(driver, wait)
 
-        driver.get(BASE_URL)
+        driver.get(DATA.get_home_url())
         home_page_obj.click_my_account()
         home_page_obj.click_register()
 
