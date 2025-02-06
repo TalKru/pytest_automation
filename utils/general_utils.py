@@ -1,6 +1,7 @@
 import os
 import pytest
 from selenium import webdriver
+import random
 
 
 def capture_screenshot(driver: webdriver, request):
@@ -27,3 +28,11 @@ def capture_screenshot(driver: webdriver, request):
     driver.save_screenshot(screenshot_path)
 
     return screenshot_path  # Return for debugging/logging
+
+
+def generate_random_email() -> str:
+    """Generate a random email address with 5 random digits."""
+    random_number = random.randint(10000, 99999)  # Generates a random 5-digit number
+    # email = f"temp{random_number}@supermail.com"
+    email = "temp" + str(random_number) + "@supermail.com"
+    return email

@@ -20,19 +20,19 @@ class LoginPage:
     # action methods
     def send_username(self, username: str):
         # username_box = self.driver.find_element(By.ID, self.input_username_id)
-        username_box = self.wait.until(EC.presence_of_element_located((By.ID, self.input_username_id)))
+        username_box = self.wait.until(EC.visibility_of_element_located((By.ID, self.input_username_id)))
         username_box.clear()
         username_box.send_keys(username)
 
     def send_password(self, password: str):
         # password_box = self.driver.find_element(By.ID, self.input_password_id)
-        password_box = self.wait.until(EC.presence_of_element_located((By.ID, self.input_password_id)))
+        password_box = self.wait.until(EC.visibility_of_element_located((By.ID, self.input_password_id)))
         password_box.clear()
         password_box.send_keys(password)
 
     def click_login(self):
         # login_btn = self.driver.find_element(By.ID, self.btn_submit_id)
-        login_btn = self.wait.until(EC.element_to_be_clickable((By.ID, self.btn_submit_id)))
+        login_btn = self.wait.until(EC.visibility_of_element_located((By.ID, self.btn_submit_id)))
         login_btn.click()
 
 

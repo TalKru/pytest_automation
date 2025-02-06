@@ -101,7 +101,7 @@ If you want to create a requirements.txt file from your currently installed pack
 # pip freeze > .\requirements.txt
 ========================================================[NOTES]========================================================
 install correctly the modules from requirements.txt
-# pip install --upgrade -r /path_to/requirements.txt
+# pip install --upgrade -r /PATH_TO/requirements.txt
 ========================================================[NOTES]========================================================
 
 ========================================================[NOTES]========================================================

@@ -20,13 +20,13 @@ from datetime import datetime
 
 
 @pytest.fixture(scope="function")
-def driver() -> webdriver.Chrome:
+def driver() -> webdriver:
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--start-maximized")
     chrome_options.add_argument("--disable-notifications")
     chrome_options.add_argument("--disable-extensions")
     chrome_options.add_argument("--ignore-certificate-errors")
-    # chrome_options.add_argument("--incognito")  # will mess up file downloads
+    chrome_options.add_argument("--incognito")  # will mess up file downloads
     # chrome_options.add_argument("--headless=new")
     # chrome_options.add_argument("--headless")
     # chrome_options.add_argument("--no-sandbox")

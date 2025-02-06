@@ -17,8 +17,7 @@
 *.bmp
 *.tiff
 *.svg
-*.pdf
-*.xlsx
+
 
 
 # Selenium-related (optional)
