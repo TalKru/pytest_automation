@@ -1,25 +1,33 @@
+![Project Theme](assets/projectTheme.png)
 
-project_root/
-├── tests/                # Contains all test cases
-│   ├── conftest.py       # Pytest fixtures and hooks
-│   ├── test_login.py     # Example test file
-│   └── test_product_page.py # Another example test file
-├── pages/                # Page Object Model (POM) classes
-│   ├── login_page.py
-│   └── product_page.py
-├── utils/                # Utility functions and helper classes
-│   ├── config.py         # Configuration settings
-│   ├── locators.py       # Element locators (if not in POM)
-│   ├── logger.py         # Logging setup
-│   └── webdriver_manager.py # Manages WebDriver instances
-├── data/                 # Test data (e.g., CSV, JSON files)
-│   └── test_data.csv
-├── reports/              # Test reports (e.g., HTML reports)
-├── screenshots/ 
-├── requirements.txt      # Project dependencies
-├── pytest.ini            # Pytest configuration
-├── README.md             # Project documentation
-└── .gitignore
+
+pytest_automation/
+├── configurations/            # Configuration files (e.g., ini files)
+│   └── config.ini             # Configuration for the tests
+├── examples/                  # Placeholder for example scripts or data
+├── logs/                      # Log files generated during tests
+├── pages/                     # Page Object Model (POM) classes
+│   ├── __init__.py            # Marks the directory as a Python package
+│   ├── home_page.py           # HomePage class
+│   ├── login_page.py          # LoginPage class
+│   └── register_page.py       # RegisterPage class
+├── reports/                   # Test reports (e.g., HTML reports)
+├── screenshots/               # Screenshots taken during tests
+├── tests/                     # Contains all test cases
+│   ├── __init__.py            # Marks the directory as a Python package
+│   ├── conftest.py            # Pytest fixtures and hooks
+│   └── test_01.py             # Example test file
+├── utils/                     # Utility functions and helpers
+│   ├── __init__.py            # Marks the directory as a Python package
+│   ├── excel_utils.py         # Utility for handling Excel files
+│   ├── general_utils.py       # General utility functions
+│   ├── logger.py              # Logging setup
+│   └── read_config_data.py    # Reads data from the config.ini
+├── .gitignore                 # Git ignore file
+├── pytest.ini                 # Pytest configuration
+├── README.md                  # Project documentation
+└── requirements.txt           # Project dependencies
+
 
 Explanation of Key Components:
 
