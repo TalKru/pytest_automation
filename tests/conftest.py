@@ -44,6 +44,39 @@ def wait(driver, wait_time_sec=10) -> WebDriverWait:
     return wait
 
 
+# ==============================[Add test suite name and test tame for each logger]=================================
+# def get_test_context(request) -> str:
+#     """
+#     Returns a string with the test context (test file and test case name)
+#     based on the request.node.nodeid.
+#     Example output: "tests_test_example_py_test_login"
+#     """
+#     return request.node.nodeid.replace("::", "_").replace("/", "_").replace("\\", "_")
+
+def get_test_context(request) -> str:
+    """
+    Returns a string with the test context based on request.node.nodeid.
+    For example, if request.node.nodeid is:
+      "tests/test_01_account_registration.py::test_correct_account_registration[2-2]"
+    this function will return:
+      "01_account_registration_correct_account_registration[2-2]"
+    It removes "tests_test_" and ".py_test_" prefixes.
+    """
+    # Replace separators with underscores.
+    context = request.node.nodeid.replace("::", "_").replace("/", "_").replace("\\", "_")
+    # Remove unwanted prefixes (assuming a typical pattern).
+    if context.startswith("tests_test_"):
+        context = context[len("tests_test_"):]
+    context = context.replace(".py_test_", "_")
+    return context
+
+
+@pytest.fixture
+def test_context(request):
+    """Fixture to provide test context for logging purposes."""
+    return get_test_context(request)
+
+
 # ==============================[embed screenshot in html report]=================================
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
