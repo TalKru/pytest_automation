@@ -1,4 +1,4 @@
-![Project Theme](assets/projectTheme.png)
+![Project Theme](examples/projectTheme.png)
 
 
 pytest_automation/
