@@ -16,6 +16,7 @@ class LoginPage:
     btn_forgot_password_xpath = "//a[text()='Forgotten Password']"
 
     text_my_account_xpath = "//h2[normalize-space()='My Account']"
+    text_no_such_account_xpath = "//div[@class='alert alert-danger alert-dismissible']"
 
     # constructor
     def __init__(self, driver: webdriver, wait: WebDriverWait):
@@ -43,6 +44,14 @@ class LoginPage:
         tup = (By.XPATH, self.btn_forgot_password_xpath)
         forgot_password_btn = self.wait.until(EC.element_to_be_clickable(tup))
         forgot_password_btn.click()
+
+    def get_no_such_account_alert(self) -> str:
+        tup = (By.XPATH, self.text_no_such_account_xpath)
+        try:
+            return self.wait.until(EC.element_to_be_clickable(tup)).text
+        except Exception as e:
+            print(f"Failed to get no_such_account_text: {e}")
+            return ""
 
     def is_my_account_page_exists(self) -> bool:
         try:

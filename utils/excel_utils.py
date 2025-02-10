@@ -175,13 +175,13 @@ def create_valid_excel_file(file_path: str):
 # ------------------------------------------------------------------------------------
 
 
-if __name__ == '__main__':
-    file_path_1 = r'D:/data/file1.xlsx'  # Use forward slashes to avoid escape sequence issues
-    file_path_2 = r'D:/data/file2.xlsx'
-
-    read_sheet(file_path_1)
-    create_valid_excel_file(file_path_2)
-    write_to_sheet(file_path_2, 10, 15)
-    apply_row_color(file_path_2, 10, 15)
+# if __name__ == '__main__':
+#     file_path_1 = r'D:/data/file1.xlsx'  # Use forward slashes to avoid escape sequence issues
+#     file_path_2 = r'D:/data/file2.xlsx'
+#
+#     read_sheet(file_path_1)
+#     create_valid_excel_file(file_path_2)
+#     write_to_sheet(file_path_2, 10, 15)
+#     apply_row_color(file_path_2, 10, 15)
 
 
