@@ -40,13 +40,15 @@ from datetime import datetime
 
 def setup_logging(log_level=logging.INFO):
     """
-    Configures logging for the entire project.
+    NOTE: change the log details level with -> log_level=logging.INFO
+    levels:
+    DEBUG > INFO > > WARNING > ERROR > FATAL
 
+    Configures logging for the entire project.
     - Ensures logs are saved in the "logs" directory.
     - The log file name is based on the test suite file that was run (if available)
       and the current date (formatted as dd_mm_yyyy).
     - If no test suite file is found in sys.argv, defaults to 'default'.
-
     This function also clears any existing logging handlers so that the new configuration is applied.
     """
     # Remove any existing handlers on the root logger.

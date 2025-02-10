@@ -105,7 +105,7 @@ def pytest_runtest_makereport(item, call):
             extra.append(pytest_html.extras.html(html))
 
     # Set the extra info back on the report.
-    report.extra = extra
+    report.extras = extra  # report.extra = extra  # attribute is deprecated?
 
 
 # ============================[Set HTML Report Path and modify report metadata]=====================================

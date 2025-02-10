@@ -11,7 +11,11 @@ class LoginPage:
     # url = "https://naveenautomationlabs.com/opencart/index.php?route=account/login"
     textbox_email_xpath = "//input[@id='input-email']"
     textbox_password_xpath = "//input[@id='input-password']"
+
     btn_login_xpath = "//input[@value='Login']"
+    btn_forgot_password_xpath = "//a[text()='Forgotten Password']"
+
+    text_my_account_xpath = "//h2[normalize-space()='My Account']"
 
     # constructor
     def __init__(self, driver: webdriver, wait: WebDriverWait):
@@ -35,9 +39,15 @@ class LoginPage:
         login_btn = self.wait.until(EC.element_to_be_clickable(tup))
         login_btn.click()
 
+    def click_forgot_password(self):
+        tup = (By.XPATH, self.btn_forgot_password_xpath)
+        forgot_password_btn = self.wait.until(EC.element_to_be_clickable(tup))
+        forgot_password_btn.click()
 
-
-
-
-
+    def is_my_account_page_exists(self) -> bool:
+        try:
+            return self.driver.find_element(By.XPATH, self.text_my_account_xpath).is_displayed()
+        except Exception as e:
+            print(f"Failed to get confirmation_login_text: {e}")
+            return False
 

@@ -7,24 +7,24 @@ pytest_automation/            <br/>
 ├── configurations/           <br/>
 │   └── config.ini            <br/>
 ├── examples/                 <br/>
-├── logs/                     <br/>  
+├── logs/                       
 ├── pages/                    <br/> 
-│   ├── __init__.py           <br/> 
-│   ├── home_page.py          <br/>  
-│   ├── login_page.py         <br/>  
+│   ├── --init--.py           <br/> 
+│   ├── home_page.py            
+│   ├── login_page.py          
 │   └── register_page.py      <br/> 
 ├── reports/                  <br/> 
 ├── screenshots/              <br/> 
 ├── tests/                    <br/> 
-│   ├── __init__.py           <br/>  
+│   ├── --init--.py             
 │   ├── conftest.py           <br/> 
 │   └── test_01.py            <br/> 
 ├── utils/                    <br/> 
-│   ├── __init__.py           <br/>  
-│   ├── excel_utils.py        <br/>  
-│   ├── general_utils.py      <br/>  
+│   ├── --init--.py             
+│   ├── excel_utils.py         
+│   ├── general_utils.py       
 │   ├── logger.py             <br/> 
-│   └── read_config_data.py   <br/>  
+│   └── read_config_data.py    
 ├── .gitignore                <br/> 
 ├── pytest.ini                <br/> 
 ├── README.md                 <br/> 
