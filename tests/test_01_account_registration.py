@@ -16,7 +16,25 @@ import time
 import requests
 
 
-@pytest.mark.repeat(2)  # will run the same test 3 times
+#@pytest.mark.skip
+def test_mock_fail_for_screenshot(driver, wait, request, test_context):
+    try:
+        home_page_obj = HomePage(driver, wait)
+        logger.info(f"[{test_context}] Init page objects for the test case")
+        driver.get(DATA.get_home_url())
+        logger.info(f"[{test_context}] loaded page url")
+        home_page_obj.click_my_account()
+        assert False
+
+    except Exception as e:
+        capture_screenshot(driver, request)
+        logger.error(f"[{test_context}] test failed: {e}")
+        pytest.fail(f"Test failed due to: {e}")
+
+
+
+@pytest.mark.skip
+@pytest.mark.repeat(3)  # will run the same test 3 times
 def test_correct_account_registration(driver, wait, request, test_context):
     try:
         # init imported page objects with driver and wait from conftest
@@ -61,6 +79,7 @@ def test_correct_account_registration(driver, wait, request, test_context):
         pytest.fail(f"Test failed due to: {e}")
 
 
+@pytest.mark.skip
 @pytest.mark.repeat(1)
 def test_missing_agreement_checkbox_error_msg(driver, wait, request, test_context):
     try:
@@ -101,7 +120,8 @@ def test_missing_agreement_checkbox_error_msg(driver, wait, request, test_contex
         pytest.fail(f"Test failed due to: {e}")
 
 
-@pytest.mark.repeat(1)
+@pytest.mark.skip
+@pytest.mark.repeat(2)
 def test_passwords_mismatch_on_registration(driver, wait, request, test_context):
     try:
         home_page_obj = HomePage(driver, wait)

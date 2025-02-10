@@ -1,4 +1,4 @@
-# **Python test automation project.**
+# **Python automation testing project.**
 ### ***With Selenium, Pytest, HTML reports, Screenshots & logs.***
 
 ![Project Theme](examples/projectTheme.png)
