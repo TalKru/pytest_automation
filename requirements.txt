@@ -1,28 +1,25 @@
 pytest==8.3.4
-pytest-dependency==0.6.0
+pytest-html==4.1.1          # use in bash: pytest --html=report.html
 pytest-metadata==3.1.1
 pytest-ordering==0.6
 pytest-repeat==0.9.3
-pytest-html==4.0.2          # For generating HTML reports
 pytest-xdist==3.6.1         # Parallel test execution
 pytest-rerunfailures==15.0  # Rerun failed tests automatically
 pytest-mock==3.11.1         # Mocking support for pytest
-selenium==4.27.1            # Browser automation library
+pytest-dependency==0.6.0    # dependency markers, skip tests that depend on failed tests
+selenium==4.28.1            # Browser automation library
 requests==2.32.3            # For API testing
 jsonschema==4.19.0          # JSON schema validation
-webdriver-manager==4.3.0    # Auto-handles WebDriver binaries
-pandas==2.2.3               # Data handling in test workflows
+webdriver-manager           # Auto-handles WebDriver binaries
 Faker==18.10.0              # Generating fake test data
 loguru==0.7.2               # Advanced logging
-matplotlib==3.9.2           # Visualization for test data (if needed)
-numpy==2.1.3                # Array/matrix operations for data-driven tests
 openpyxl==3.1.5             # Working with Excel test data
-packaging==24.1             # Parsing and comparing package versions
+packaging==24.2             # Parsing and comparing package versions
 pillow==11.0.0              # Image processing for automation
 PyYAML==6.0.2               # Parsing YAML configurations
-pytest-dependency==0.6.0    # dependency markers, skip tests that depend on failed tests
-pytest-html==4.1.1          # use in bash: pytest --html=report.html
-openpyxl==3.1.5             # manade excel sheets
+matplotlib==3.9.2           # (Optional) For data visualization (if needed)
+numpy==2.1.3                # (Optional) Array/matrix operations for data-driven tests
+pandas==2.2.3               # Data handling in test workflows
 
 
 
