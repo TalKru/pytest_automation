@@ -97,6 +97,54 @@ logger = setup_logging()
 # def setup_logging(log_level=logging.INFO):
 #     """
 #     Configures logging for the entire project.
+#
+#     - Ensures logs are saved in the "logs" directory.
+#     - The log file name is based on a test suite file name if a single file is executed,
+#       otherwise it defaults to "combined" when multiple test files are run.
+#     - The filename also includes the current date (formatted as dd_mm_yyyy).
+#     - Any existing logging handlers are removed before configuration.
+#     """
+#     # Remove any existing handlers on the root logger.
+#     for handler in logging.root.handlers[:]:
+#         logging.root.removeHandler(handler)
+#
+#     # Create the logs directory at the project root.
+#     logs_dir = os.path.join(os.getcwd(), "logs")
+#     os.makedirs(logs_dir, exist_ok=True)
+#
+#     # Gather all command-line arguments that end with '.py'
+#     test_suite_files = [arg for arg in sys.argv if arg.endswith(".py")]
+#
+#     # If exactly one test file is specified, use its name; otherwise, default to 'combined'
+#     if len(test_suite_files) == 1:
+#         test_suite_name = os.path.basename(test_suite_files[0]).replace(".py", "").replace("test_", "")
+#     else:
+#         test_suite_name = "combined"
+#
+#     # Get the current date in the format "dd_mm_yyyy"
+#     current_date = datetime.now().strftime("%d_%m_%Y")
+#     # Construct the log file name, e.g., "login_29_01_2025.log" or "combined_29_01_2025.log"
+#     log_file_name = f"{test_suite_name}_{current_date}.log"
+#     log_file = os.path.join(logs_dir, log_file_name)
+#
+#     # Configure logging: output both to file and console.
+#     logging.basicConfig(
+#         level=log_level,
+#         format="%(asctime)s [%(levelname)s] %(message)s",
+#         datefmt="%Y-%m-%d %H:%M:%S",  # No milliseconds
+#         handlers=[
+#             logging.FileHandler(log_file),
+#             logging.StreamHandler()
+#         ]
+#     )
+#     # Return a logger instance for this module.
+#     return logging.getLogger(__name__)
+
+# ====================================================================================================================
+
+# def setup_logging(log_level=logging.INFO):
+#     """
+#     Configures logging for the entire project.
 #     Log messages are saved in the "logs" directory with the test suite filename and date.
 #     """
 #     # Create the logs directory at the project root if it doesnt already exist
