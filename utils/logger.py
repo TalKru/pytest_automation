@@ -60,7 +60,7 @@ def setup_logging(log_level=logging.INFO):
     os.makedirs(logs_dir, exist_ok=True)
 
     # Try to extract the test suite filename from sys.argv (e.g., "test_login.py")
-    test_suite_name = "default"
+    test_suite_name = "combined_suites"
     for arg in sys.argv:
         if arg.endswith(".py"):
             # Extract the basename (e.g., test_login)

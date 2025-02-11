@@ -16,7 +16,7 @@ import time
 import requests
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_correct_login(driver, wait, request, test_context):
     try:
         home_page_obj = HomePage(driver, wait)
@@ -46,6 +46,7 @@ def test_correct_login(driver, wait, request, test_context):
         pytest.fail(f"Test failed due to: {e}")
 
 
+# @pytest.mark.skip
 def test_invalid_login(driver, wait, request, test_context):
     try:
         home_page_obj = HomePage(driver, wait)
