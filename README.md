@@ -2,34 +2,34 @@
 ### ***With Selenium, Pytest, HTML reports, Screenshots & logs.***
 
 ![Project Theme](examples/projectTheme.png)
-
-pytest_automation/            <br/>
-├── configurations/           <br/>
-│   └── config.ini            <br/>
-├── examples/                 <br/>
+```
+pytest_automation/ 
+├── configurations/ 
+│   └── config.ini  
+├── examples/       
 ├── logs/                       
-├── pages/                    <br/> 
-│   ├── --init--.py           <br/> 
+├── pages/               
+│   ├── __init__.py       
 │   ├── home_page.py            
 │   ├── login_page.py          
-│   └── register_page.py      <br/> 
-├── reports/                  <br/> 
-├── screenshots/              <br/> 
-├── tests/                    <br/> 
-│   ├── --init--.py             
-│   ├── conftest.py           <br/> 
-│   └── test_01.py            <br/> 
-├── utils/                    <br/> 
-│   ├── --init--.py             
+│   └── register_page.py 
+├── reports/              
+├── screenshots/          
+├── tests/                
+│   ├── __init__.py             
+│   ├── conftest.py       
+│   └── test_01.py         
+├── utils/                 
+│   ├── __init__.py             
 │   ├── excel_utils.py         
 │   ├── general_utils.py       
-│   ├── logger.py             <br/> 
+│   ├── logger.py           
 │   └── read_config_data.py    
-├── .gitignore                <br/> 
-├── pytest.ini                <br/> 
-├── README.md                 <br/> 
-└── requirements.txt          <br/>
-
+├── .gitignore               
+├── pytest.ini             
+├── README.md              
+└── requirements.txt       
+```
 
 Explanation of Key Components:
 
@@ -88,31 +88,97 @@ Generates fake data for testing (e.g., names, addresses, emails).
 loguru
 Adds better logging capabilities, making it easier to debug your tests.
 
-========================================================(Notes)========================================================
+========================================================(Notes)========================================================<br/>
 to skip a test, use a marker:
+```
 @pytest.mark.skip
-========================================================(Notes)========================================================
+```
+========================================================(Notes)========================================================<br/>
 when creating a fixture, set the scope accordingly to the needs and lifecycle, the default scope is "function"
+```
 @pytest.fixture(scope="function")
-
+@pytest.fixture(scope="class")
+@pytest.fixture(scope="package")
+@pytest.fixture(scope="session")
+```
 The scope="module" argument means the fixture will run only once per module (file), 
 not for every test function. Other scopes include:
 "function" (default): Runs for each test function.
 "class": Runs once per test class.
 "package": Runs once per package of tests.
 "session": Runs once per test session.
-========================================================(Notes)========================================================
+
+========================================================(Notes)========================================================<br/>
 parallel execution capabilities (via the pytest-xdist plugin)
-install: pip install pytest-xdist
-Run:     pytest -n NUM ... (where NUM is the number of parallel processes you want to use). 
-For example, pytest -n 4 will run your tests using 4 processes.
-========================================================(Notes)========================================================
+```
+$: pip install pytest-xdist
+```
+Run:     
+```
+pytest -n NUM ...
+```
+(where NUM is the number of parallel processes you want to use). 
+For example, pytest ```-n 4``` will run your tests using 4 processes.
+========================================================(Notes)========================================================<br/>
 If you want to create a requirements.txt file from your currently installed packages, use:
-$: pip freeze > pytest_automation\requirements.txt
-========================================================(Notes)========================================================
+```
+$: pip freeze > root\requirements.txt
+```
+========================================================(Notes)========================================================<br/>
 install correctly the modules from requirements.txt
-$: pip install --upgrade -r \PATH_TO\requirements.txt
-========================================================(Notes)========================================================
+```
+$: pip install --upgrade -r root\requirements.txt
+```
+========================================================(Notes)========================================================<br/>
+How to run all the test files (all test cases that isn't marked with a .skip marker)
+```
+$: pytest .\tests\
+```
+with the current setup, no need to specify the flags as -v -s -n=3 can be configured inside 
+\pytest_automation\pytest.ini file to execute automatically,
+also, no need to specify the html test creation flag (--html=reports\report.html) 
+since pytest will use pytest_configure(config) function from conftest.py file,
+this function configures the location and naming scheme of the generated log files.
+========================================================(Notes)========================================================<br/>
+1. Define Custom Markers in Your Tests:
+In your test files, use the @pytest.mark decorator with a custom name such as sanity, regression, etc.
+```
+@pytest.mark.sanity
+@pytest.mark.regression
+@pytest.mark.smoke
+```
 
-========================================================(Notes)========================================================
+2. Register the Markers in pytest.ini:
+register your custom markers in your pytest.ini file. This avoids warnings and makes your markers discoverable.
+Create (or update) your root\pytest.ini with the following:
+```
+[pytest]
+markers =
+    sanity: marks tests as sanity tests.
+    regression: marks tests as regression tests.
+    smoke: marks tests as smoke tests.
 
+```
+3. Run Tests by Marker:
+You can then execute only the tests for a specific group using the ```-m``` flag.
+To run sanity tests:
+```
+pytest -m "sanity"
+```
+To run regression tests:
+```
+pytest -m "regression"
+```
+You can also combine markers. For example, to run both sanity and smoke tests:
+```
+pytest -m "sanity or smoke"
+```
+Or to run tests that are both regression and smoke (if applicable):
+```
+pytest -m "regression and smoke"
+```
+========================================================(Notes)========================================================<br/>
+
+========================================================(Notes)========================================================<br/>
+
+========================================================(Notes)========================================================<br/>
