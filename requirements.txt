@@ -1,3 +1,6 @@
+###### Requirements without Version Specifiers ######
+webdriver-manager           # Auto-handles WebDriver binaries
+###### Requirements with Version Specifiers ######
 pytest==8.3.4
 pytest-html==4.1.1          # use in bash: pytest --html=report.html
 pytest-metadata==3.1.1
@@ -10,7 +13,6 @@ pytest-dependency==0.6.0    # dependency markers, skip tests that depend on fail
 selenium==4.28.1            # Browser automation library
 requests==2.32.3            # For API testing
 jsonschema==4.19.0          # JSON schema validation
-webdriver-manager           # Auto-handles WebDriver binaries
 Faker==18.10.0              # Generating fake test data
 loguru==0.7.2               # Advanced logging
 openpyxl==3.1.5             # Working with Excel test data

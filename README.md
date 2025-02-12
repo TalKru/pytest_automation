@@ -177,8 +177,49 @@ Or to run tests that are both regression and smoke (if applicable):
 ```
 pytest -m "regression and smoke"
 ```
-========================================================(Notes)========================================================<br/>
+=============================================(Notes)=============================================<br/>
 
-========================================================(Notes)========================================================<br/>
+=============================================(Notes)=============================================<br/>
 
-========================================================(Notes)========================================================<br/>
+=============================================(Notes)=============================================<br/>
+
+=============================================(Notes)=============================================<br/>
+
+=============================================(Setup)=============================================<br/>
+### Environment Setup & Test Execution on Windows:
+1. Install Python 3 (Ensure you add Python to your PATH)
+2. Set PowerShell Execution Policy (if needed):
+Open PowerShell and run:
+```
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+When prompted, select [A] Yes to All.
+
+3. inside your /root/ project dir, Create and Activate the Virtual Environment:
+```
+python -m venv .venv
+```
+4. Activate the virtual environment:
+PowerShell:
+```
+.\.venv\Scripts\Activate.ps1
+```
+Command Prompt:
+```
+.\.venv\Scripts\activate.bat
+```
+5. Upgrade pip and Install Dependencies:
+```
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+=============================================(Setup)=============================================<br/>
+
+
+
+
+
+
+
+
+
