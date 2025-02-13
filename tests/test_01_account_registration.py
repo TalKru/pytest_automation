@@ -33,6 +33,7 @@ def test_mock_fail_for_screenshot(driver, wait, request, test_context):
 
 
 # @pytest.mark.skip
+@pytest.mark.sanity
 @pytest.mark.repeat(3)  # will run the same test 3 times
 def test_correct_account_registration(driver, wait, request, test_context):
     try:
@@ -79,6 +80,7 @@ def test_correct_account_registration(driver, wait, request, test_context):
 
 
 # @pytest.mark.skip
+@pytest.mark.regression
 @pytest.mark.repeat(1)
 def test_missing_agreement_checkbox_error_msg(driver, wait, request, test_context):
     try:
@@ -120,6 +122,7 @@ def test_missing_agreement_checkbox_error_msg(driver, wait, request, test_contex
 
 
 # @pytest.mark.skip
+@pytest.mark.regression
 @pytest.mark.repeat(2)
 def test_passwords_mismatch_on_registration(driver, wait, request, test_context):
     try:

@@ -17,6 +17,7 @@ import requests
 
 
 # @pytest.mark.skip
+@pytest.mark.sanity
 def test_correct_login(driver, wait, request, test_context):
     try:
         home_page_obj = HomePage(driver, wait)
@@ -47,6 +48,7 @@ def test_correct_login(driver, wait, request, test_context):
 
 
 # @pytest.mark.skip
+@pytest.mark.regression
 def test_invalid_login(driver, wait, request, test_context):
     try:
         home_page_obj = HomePage(driver, wait)

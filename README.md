@@ -60,6 +60,10 @@ Generates detailed HTML reports for your test runs.
 
 pytest-xdist
 Enables parallel test execution, speeding up large test suites.
+To Run tests in parallel use -n=NUM flag to specify number of parallel processes:
+```
+pytest -n=3 .\tests\test_001.py
+```
 
 pytest-rerunfailures
 Reruns failed tests automatically to handle flakiness in test environments.
@@ -186,10 +190,10 @@ pytest -m "regression and smoke"
 =============================================(Notes)=============================================<br/>
 
 =============================================(Setup)=============================================<br/>
-### Environment Setup & Test Execution on Windows:
-1. Install Python 3 (Ensure you add Python to your PATH)
-2. Set PowerShell Execution Policy (if needed):
-Open PowerShell and run:
+### Environment Setup & Test Execution on Windows:<br/>
+1. Install Python 3 (Ensure you add Python to your PATH)<br/>
+2. Set PowerShell Execution Policy (if needed):<br/>
+Open PowerShell and run:<br/>
 ```
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
@@ -199,16 +203,16 @@ When prompted, select [A] Yes to All.
 ```
 python -m venv .venv
 ```
-4. Activate the virtual environment:
-PowerShell:
+4. Activate the virtual environment:<br/>
+PowerShell:<br/>
 ```
 .\.venv\Scripts\Activate.ps1
 ```
-Command Prompt:
+Command Prompt:<br/>
 ```
 .\.venv\Scripts\activate.bat
 ```
-5. Upgrade pip and Install Dependencies:
+5. Upgrade pip and Install Dependencies:<br/>
 ```
 python -m pip install --upgrade pip
 pip install -r requirements.txt
