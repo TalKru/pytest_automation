@@ -2,6 +2,7 @@
 import pytest
 from pages.home_page import HomePage          # "HomePage" is a class with all the locators and funcs
 from pages.login_page import LoginPage
+from pages.account_page import AccountPage
 # ---------------------------------------------------------------------------------------------------------- #
 from utils.logger import logger
 from utils.general_utils import generate_random_email
@@ -77,4 +78,39 @@ def test_invalid_login(driver, wait, request, test_context):
         capture_screenshot(driver, request)
         logger.error(f"[{test_context}] test failed: {e}")
         pytest.fail(f"Test failed due to: {e}")
+
+
+@pytest.mark.skip
+@pytest.mark.sanity
+def test_correct_logout(driver, wait, request, test_context):
+    try:
+        home_page_obj = HomePage(driver, wait)
+        login_page_obj = LoginPage(driver, wait)
+        logout_page_obj = AccountPage(driver, wait)
+        logger.info(f"[{test_context}] Init page objects for the test case")
+        driver.get(DATA.get_home_url())
+        logger.info(f"[{test_context}] loaded page url")
+
+        home_page_obj.click_my_account()
+        home_page_obj.click_login()
+        email_txt = DATA.get_email()        # get valid login credentials from config.ini
+        password_txt = DATA.get_password()  # get valid login credentials from config.ini
+        login_page_obj.send_email(email_txt)
+        login_page_obj.send_password(password_txt)
+        login_page_obj.click_login()
+        logger.info(f"[{test_context}] account logged in...")
+
+        logout_page_obj.click_logout()
+        logger.info(f"[{test_context}] account logged out...")
+
+        expected_txt = "You have been logged off your account"
+        logout_text = logout_page_obj.get_logout_text()
+        logger.info(f"[{test_context}] {logout_text=}")
+        assert expected_txt in logout_text
+
+    except Exception as e:
+        capture_screenshot(driver, request)
+        logger.error(f"[{test_context}] test failed: {e}")
+        pytest.fail(f"Test failed due to: {e}")
+
 
