@@ -21,6 +21,7 @@ class RegisterPage:
 
     btn_continue_xpath = "//input[@value='Continue']"
 
+    text_register_acc_xpath = "//*[@id='content']/h1"
     text_msg_conf_xpath = "//h1[normalize-space()='Your Account Has Been Created!']"
     text_warning_not_agreed_to_policy_xpath = "//div[@class='alert alert-danger alert-dismissible']"
     text_err_passwords_mismatch = "//div[@class='text-danger']"
@@ -110,4 +111,15 @@ class RegisterPage:
         except Exception as e:
             print(f"Failed to get passwords mismatch msg: {e}")
             return None
+
+    def get_register_account_text(self):
+        tup = (By.XPATH, self.text_register_acc_xpath)
+        try:
+            element = self.wait.until(EC.visibility_of_element_located(tup))
+            return element.text
+
+        except Exception as e:
+            print(f"Failed to get register_acc text: {e}")
+            return None
+
 

@@ -14,6 +14,7 @@ class LoginPage:
 
     btn_login_xpath = "//input[@value='Login']"
     btn_forgot_password_xpath = "//a[text()='Forgotten Password']"
+    btn_continue_xpath = "//a[normalize-space()='Continue']"
 
     text_my_account_xpath = "//h2[normalize-space()='My Account']"
     text_no_such_account_xpath = "//div[@class='alert alert-danger alert-dismissible']"
@@ -44,6 +45,11 @@ class LoginPage:
         tup = (By.XPATH, self.btn_forgot_password_xpath)
         forgot_password_btn = self.wait.until(EC.element_to_be_clickable(tup))
         forgot_password_btn.click()
+
+    def click_continue(self):
+        tup = (By.XPATH, self.btn_continue_xpath)
+        continue_btn = self.wait.until(EC.element_to_be_clickable(tup))
+        continue_btn.click()
 
     def get_no_such_account_alert(self) -> str:
         tup = (By.XPATH, self.text_no_such_account_xpath)

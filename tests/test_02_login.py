@@ -3,6 +3,7 @@ import pytest
 from pages.home_page import HomePage          # "HomePage" is a class with all the locators and funcs
 from pages.login_page import LoginPage
 from pages.account_page import AccountPage
+from pages.register_page import RegisterPage
 # ---------------------------------------------------------------------------------------------------------- #
 from utils.logger import logger
 from utils.general_utils import generate_random_email
@@ -62,7 +63,7 @@ def test_invalid_login(driver, wait, request, test_context):
         home_page_obj.click_login()
 
         email_txt = "myfakemail450@fakemail.com"
-        password_txt = "F@K@P@$$WROD_0971"
+        password_txt = "F@KePa$$WoRD_0971"
         login_page_obj.send_email(email_txt)
         logger.info(f"[{test_context}] typed email: {email_txt}")
         login_page_obj.send_password(password_txt)
@@ -80,7 +81,7 @@ def test_invalid_login(driver, wait, request, test_context):
         pytest.fail(f"Test failed due to: {e}")
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 @pytest.mark.sanity
 def test_correct_logout(driver, wait, request, test_context):
     try:
@@ -96,7 +97,9 @@ def test_correct_logout(driver, wait, request, test_context):
         email_txt = DATA.get_email()        # get valid login credentials from config.ini
         password_txt = DATA.get_password()  # get valid login credentials from config.ini
         login_page_obj.send_email(email_txt)
+        logger.info(f"[{test_context}] typed email: {email_txt}")
         login_page_obj.send_password(password_txt)
+        logger.info(f"[{test_context}] typed password: {password_txt}")
         login_page_obj.click_login()
         logger.info(f"[{test_context}] account logged in...")
 
@@ -112,5 +115,35 @@ def test_correct_logout(driver, wait, request, test_context):
         capture_screenshot(driver, request)
         logger.error(f"[{test_context}] test failed: {e}")
         pytest.fail(f"Test failed due to: {e}")
+
+
+@pytest.mark.sanity
+def test_continue_to_registration(driver, wait, request, test_context):
+    try:
+        home_page_obj = HomePage(driver, wait)
+        login_page_obj = LoginPage(driver, wait)
+        register_page_obj = RegisterPage(driver, wait)
+        logger.info(f"[{test_context}] Init page objects for the test case")
+        driver.get(DATA.get_home_url())
+        logger.info(f"[{test_context}] loaded page url")
+
+        home_page_obj.click_my_account()
+        logger.info(f"[{test_context}] clicked my account")
+        home_page_obj.click_login()
+        logger.info(f"[{test_context}] clicked login")
+        login_page_obj.click_continue()
+        logger.info(f"[{test_context}] clicked my continue")
+
+        expected_text = "Register Account"
+        register_text = register_page_obj.get_register_account_text()
+        logger.info(f"[{test_context}] {register_text=}")
+        assert expected_text in register_text
+
+    except Exception as e:
+        capture_screenshot(driver, request)
+        logger.error(f"[{test_context}] test failed: {e}")
+        pytest.fail(f"Test failed due to: {e}")
+
+
 
 

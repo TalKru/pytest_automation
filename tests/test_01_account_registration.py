@@ -19,11 +19,13 @@ import requests
 #@pytest.mark.skip
 def test_mock_fail_for_screenshot(driver, wait, request, test_context):
     try:
+        logger.warning(f"[{test_context}] This test case is an example FAIL for a screenshot")
         home_page_obj = HomePage(driver, wait)
         logger.info(f"[{test_context}] Init page objects for the test case")
         driver.get(DATA.get_home_url())
         logger.info(f"[{test_context}] loaded page url")
         home_page_obj.click_my_account()
+        logger.warning(f"[{test_context}] Warning! assert False")
         assert False
 
     except Exception as e:
