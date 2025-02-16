@@ -9,6 +9,7 @@ echo and choose [A] for "Yes to All".
 pause
 
 REM Check if the virtual environment exists; if not, create it.
+REM NOTE! if PowerShell is used type: .\.venv\Scripts\Activate.ps1
 IF NOT EXIST ".\.venv\Scripts\activate.bat" (
     echo Creating virtual environment...
     python -m venv .venv

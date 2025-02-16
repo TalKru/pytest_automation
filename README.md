@@ -92,12 +92,12 @@ Generates fake data for testing (e.g., names, addresses, emails).
 loguru
 Adds better logging capabilities, making it easier to debug your tests.
 
-========================================================(Notes)========================================================<br/>
+=============================================(Notes)=============================================<br/>
 to skip a test, use a marker:
 ```
 @pytest.mark.skip
 ```
-========================================================(Notes)========================================================<br/>
+=============================================(Notes)=============================================<br/>
 when creating a fixture, set the scope accordingly to the needs and lifecycle, the default scope is "function"
 ```
 @pytest.fixture(scope="function")
@@ -112,7 +112,7 @@ not for every test function. Other scopes include:
 "package": Runs once per package of tests.
 "session": Runs once per test session.
 
-========================================================(Notes)========================================================<br/>
+=============================================(Notes)=============================================<br/>
 parallel execution capabilities (via the pytest-xdist plugin)
 ```
 $: pip install pytest-xdist
@@ -123,17 +123,27 @@ pytest -n NUM ...
 ```
 (where NUM is the number of parallel processes you want to use). 
 For example, pytest ```-n 4``` will run your tests using 4 processes.
-========================================================(Notes)========================================================<br/>
+=============================================(Notes)=============================================<br/>
+run specific tests from specific test suites:
+```
+pytest path_to_test_file.py::test_name1, path_to_test_file.py::test_name2
+```
+=============================================(Notes)=============================================<br/>
+run tests with repeat:
+```
+pytest --count=3 tests\header_test.py
+```
+=============================================(Notes)=============================================<br/>
 If you want to create a requirements.txt file from your currently installed packages, use:
 ```
 $: pip freeze > root\requirements.txt
 ```
-========================================================(Notes)========================================================<br/>
+=============================================(Notes)=============================================<br/>
 install correctly the modules from requirements.txt
 ```
 $: pip install --upgrade -r root\requirements.txt
 ```
-========================================================(Notes)========================================================<br/>
+=============================================(Notes)=============================================<br/>
 How to run all the test files (all test cases that isn't marked with a .skip marker)
 ```
 $: pytest .\tests\
@@ -143,7 +153,7 @@ with the current setup, no need to specify the flags as -v -s -n=3 can be config
 also, no need to specify the html test creation flag (--html=reports\report.html) 
 since pytest will use pytest_configure(config) function from conftest.py file,
 this function configures the location and naming scheme of the generated log files.
-========================================================(Notes)========================================================<br/>
+=============================================(Notes)=============================================<br/>
 1. Define Custom Markers in Your Tests:
 In your test files, use the @pytest.mark decorator with a custom name such as sanity, regression, etc.
 ```
