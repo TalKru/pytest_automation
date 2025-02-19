@@ -24,6 +24,16 @@ import requests
 # @pytest.mark.skip
 @pytest.mark.sanity
 def test_add_items_to_cart(driver, wait, request, test_context):
+    """
+    Test Case: Add multiple laptop items to the shopping cart and verify item count.
+    Steps:
+    1. Navigate to the home page.
+    2. Open the laptops category and load the laptops listing.
+    3. Open each laptop in a new tab, add a specified quantity to the cart, then close the tab.
+    4. Navigate to the shopping cart and verify the correct number of unique laptop types are added.
+    Expected Result:
+    - The shopping cart should contain exactly 3 different laptop types.
+    """
     try:
         home_page_obj = HomePage(driver, wait)
         laptops_page_obj = LaptopsPage(driver, wait)
@@ -32,12 +42,12 @@ def test_add_items_to_cart(driver, wait, request, test_context):
         driver.get(DATA.get_home_url())
         logger.info(f"[{test_context}] loaded page url")
 
-        # open items - laptops
+        # Navigate to laptops
         home_page_obj.click_laptops_dropdown_options()
         home_page_obj.click_laptops_menu()
-        logger.info(f"[{test_context}] click_laptops_menu")
+        logger.info(f"[{test_context}] Navigated to laptops menu")
 
-        # add 3 laptops to the cart
+        # Prepare locators for 3 laptops
         locator_tup_item_1 = laptops_page_obj.get_locate_tup_apple_laptop_link()
         locator_tup_item_2 = laptops_page_obj.get_locate_tup_hp_laptop_link()
         locator_tup_item_3 = laptops_page_obj.get_locate_tup_sony_laptop_link()
@@ -113,4 +123,61 @@ def test_add_items_to_cart(driver, wait, request, test_context):
         capture_screenshot(driver, request)
         logger.error(f"[{test_context}] test failed: {e}")
         pytest.fail(f"Test failed due to: {e}")
+
+
+@pytest.mark.regression
+def test_remove_item_from_cart(driver, wait, request, test_context):
+    """
+    Test Case: Add one laptop to the cart, remove it, then verify the cart is empty.
+    Steps:
+    1. Navigate to the home page and open laptops.
+    2. Add a single laptop to the cart.
+    3. Navigate to the shopping cart and remove the item.
+    4. Verify the cart is empty (0 items).
+    Expected Result:
+    - The cart should have 0 items after removal.
+    """
+    try:
+        home_page_obj = HomePage(driver, wait)
+        laptops_page_obj = LaptopsPage(driver, wait)
+        shopping_cart_obj = ShoppingCartPage(driver, wait)
+
+        # 1. Navigate to home, then open laptops
+        driver.get(DATA.get_home_url())
+        logger.info(f"[{test_context}] Loaded home page")
+
+        home_page_obj.click_laptops_dropdown_options()
+        logger.info(f"[{test_context}] Clicked 'Laptops & Notebooks' dropdown")
+
+        home_page_obj.click_laptops_menu()
+        logger.info(f"[{test_context}] Selected 'Show All Laptops & Notebooks'")
+
+        # 2. Add a single laptop (HP) to the cart
+        laptops_page_obj.click_hp_laptop_link()
+        logger.info(f"[{test_context}] Clicked HP laptop link")
+
+        laptops_page_obj.select_amount_of_items(1)
+        logger.info(f"[{test_context}] Selected quantity: 1")
+
+        laptops_page_obj.click_add_to_cart()
+        logger.info(f"[{test_context}] Added HP laptop to cart")
+
+        # 3. Navigate to cart, remove the item
+        laptops_page_obj.click_shopping_cart()
+        logger.info(f"[{test_context}] Navigated to Shopping Cart")
+
+        shopping_cart_obj.remove_item_by_index(0)
+        logger.info(f"[{test_context}] Removed item at index 0")
+
+        # 4. Verify cart is empty
+        item_count = shopping_cart_obj.get_amount_of_items_in_cart()
+        logger.info(f"[{test_context}] Cart item count = {item_count}")
+
+        assert item_count == 0, f"Expected empty cart, found {item_count} items."
+
+    except Exception as e:
+        capture_screenshot(driver, request)
+        logger.error(f"[{test_context}] test failed: {e}")
+        pytest.fail(f"Test failed due to: {e}")
+
 
