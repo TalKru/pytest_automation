@@ -1,5 +1,4 @@
-
-
+# ---------------------------------------------------------------------------------------------------------- #
 import pytest
 import pytest_html
 from selenium import webdriver
@@ -8,9 +7,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver import ActionChains, Keys
 from pytest_metadata.plugin import metadata_key
+# ---------------------------------------------------------------------------------------------------------- #
 import time
 from datetime import datetime
 import os
+# ---------------------------------------------------------------------------------------------------------- #
 
 
 @pytest.fixture(scope="function")

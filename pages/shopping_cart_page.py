@@ -10,9 +10,12 @@ from selenium.webdriver import ActionChains, Keys
 class ShoppingCartPage:
     btn_checkout_xpath = "//a[@class='btn btn-primary']"
     btn_shopping_cart_xpath = "//span[normalize-space()='Shopping Cart']"
+    btn_update_quantity_xpath = ".//button[@data-original-title='Update']"
     btns_remove_items_xpath = "//button[@class='btn btn-danger']"
 
     table_cart_items_list_xpath = "//div[@class='table-responsive']//tbody"
+
+    textbox_quantity_xpath = ".//input[contains(@name,'quantity[')]"
 
     def __init__(self, driver: webdriver, wait: WebDriverWait):
         self.driver = driver
@@ -61,6 +64,26 @@ class ShoppingCartPage:
         remove_button.click()
         time.sleep(1.5)  # time to update
 
+    def update_item_quantity(self, new_quantity: int):
+        """
+        Updates the quantity of the cart item at the given row index, then clicks the update button.
+        """
+        qty_input = self.wait.until(EC.presence_of_element_located((By.XPATH, self.textbox_quantity_xpath)))
+        qty_input.clear()
+        qty_input.send_keys(str(new_quantity))
+
+        # Click the "Update" button (often has a refresh icon or 'data-original-title="Update"')
+        update_button = self.wait.until(EC.presence_of_element_located((By.XPATH, self.btn_update_quantity_xpath)))
+        update_button.click()
+
+        time.sleep(1.5)  # brief wait for the update to apply
+
+    def get_item_quantity(self) -> int:
+        """
+        Returns the current quantity of the cart item at the given row index.
+        """
+        qty_input = self.wait.until(EC.presence_of_element_located((By.XPATH, self.textbox_quantity_xpath)))
+        return int(qty_input.get_attribute("value"))
 
 
 

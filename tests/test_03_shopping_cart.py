@@ -181,3 +181,61 @@ def test_remove_item_from_cart(driver, wait, request, test_context):
         pytest.fail(f"Test failed due to: {e}")
 
 
+@pytest.mark.regression
+def test_update_item_quantity_in_cart(driver, wait, request, test_context):
+    """
+    Test Case: Update the quantity of an item in the shopping cart.
+
+    Steps:
+    1. Navigate to the home page and open the laptops section.
+    2. Add a single laptop to the cart (quantity=1).
+    3. Go to the shopping cart page.
+    4. Update the laptop's quantity to 3.
+    5. Verify the quantity is updated to 3.
+
+    Expected Result:
+    - The item's quantity in the cart should be exactly 3.
+    """
+    try:
+        home_page_obj = HomePage(driver, wait)
+        laptops_page_obj = LaptopsPage(driver, wait)
+        shopping_cart_obj = ShoppingCartPage(driver, wait)
+
+        # 1. Navigate to home, open laptops
+        driver.get(DATA.get_home_url())
+        logger.info(f"[{test_context}] Loaded home page")
+
+        home_page_obj.click_laptops_dropdown_options()
+        logger.info(f"[{test_context}] Clicked 'Laptops & Notebooks' dropdown")
+
+        home_page_obj.click_laptops_menu()
+        logger.info(f"[{test_context}] Selected 'Show All Laptops & Notebooks'")
+
+        # 2. Add one laptop with quantity=1
+        laptops_page_obj.click_hp_laptop_link()
+        logger.info(f"[{test_context}] Clicked HP laptop link")
+
+        laptops_page_obj.select_amount_of_items(1)
+        logger.info(f"[{test_context}] Set quantity to 1")
+
+        laptops_page_obj.click_add_to_cart()
+        logger.info(f"[{test_context}] Added HP laptop to cart")
+
+        # 3. Go to the shopping cart page
+        laptops_page_obj.click_shopping_cart()
+        logger.info(f"[{test_context}] Navigated to Shopping Cart")
+
+        # 4. Update the laptop's quantity to 3
+        shopping_cart_obj.update_item_quantity(3)
+        logger.info(f"[{test_context}] Updated item quantity at index 0 to 3")
+
+        # 5. Verify the quantity is updated to 3
+        actual_qty = shopping_cart_obj.get_item_quantity()
+        logger.info(f"[{test_context}] Actual item quantity: {actual_qty}")
+
+        assert actual_qty == 3, f"Expected quantity=3, but found {actual_qty}"
+
+    except Exception as e:
+        capture_screenshot(driver, request)
+        logger.error(f"[{test_context}] test failed: {e}")
+        pytest.fail(f"Test failed due to: {e}")
