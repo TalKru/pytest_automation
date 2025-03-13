@@ -20,8 +20,8 @@ def get_home_url():
 
 def get_email():
     try:
-        url = config.get('commonInfo', 'email')
-        return url
+        mail = config.get('commonInfo', 'email')
+        return mail
 
     except (configparser.NoSectionError, configparser.NoOptionError) as e:
         raise Exception(f"Error reading email from config: {e}")
@@ -29,8 +29,8 @@ def get_email():
 
 def get_password():
     try:
-        url = config.get('commonInfo', 'password')
-        return url
+        password = config.get('commonInfo', 'password')
+        return password
 
     except (configparser.NoSectionError, configparser.NoOptionError) as e:
         raise Exception(f"Error reading password from config: {e}")
