@@ -15,10 +15,11 @@ pytest_automation/
 │   └── register_page.py 
 ├── reports/              
 ├── screenshots/          
-├── tests/                
-│   ├── __init__.py             
-│   ├── conftest.py       
-│   └── test_01.py         
+├── tests/                           
+│   ├── conftest.py  
+│   ├── test_01.py 
+│   ├── test_03.py 
+│   └── test_xy.py 
 ├── utils/                 
 │   ├── __init__.py             
 │   ├── excel_utils.py         
