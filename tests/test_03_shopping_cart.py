@@ -23,6 +23,7 @@ import requests
 
 # @pytest.mark.skip
 @pytest.mark.sanity
+@pytest.mark.repeat(1)
 def test_add_items_to_cart(driver, wait, request, test_context):
     """
     Test Case: Add multiple laptop items to the shopping cart and verify item count.
@@ -47,77 +48,26 @@ def test_add_items_to_cart(driver, wait, request, test_context):
         home_page_obj.click_laptops_menu()
         logger.info(f"[{test_context}] Navigated to laptops menu")
 
-        # Prepare locators for 3 laptops
-        locator_tup_item_1 = laptops_page_obj.get_locate_tup_apple_laptop_link()
-        locator_tup_item_2 = laptops_page_obj.get_locate_tup_hp_laptop_link()
-        locator_tup_item_3 = laptops_page_obj.get_locate_tup_sony_laptop_link()
+        # open each item in new tab, set qty & add to cart
+        laptops_page_obj.open_item_new_tab_add_close(LaptopsPage.linktext_item_MacBook, amount=4)
+        logger.info("Added MacBook x4")
+        time.sleep(0.2)
 
-        button_1 = wait.until(EC.presence_of_element_located(locator_tup_item_1))
-        button_2 = wait.until(EC.presence_of_element_located(locator_tup_item_2))
-        button_3 = wait.until(EC.presence_of_element_located(locator_tup_item_3))
+        laptops_page_obj.open_item_new_tab_add_close(LaptopsPage.linktext_item_HPLP3065, amount=3)
+        logger.info("Added HP LP3065 x3")
+        time.sleep(0.2)
 
-        keys_combo = Keys.CONTROL + Keys.ENTER
+        laptops_page_obj.open_item_new_tab_add_close(LaptopsPage.linktext_item_SonyVAIO, amount=1)
+        logger.info("Added Sony VAIO x1")
+        time.sleep(0.2)
 
-        # -------------------------------------------------------------------------------------------->
-        button_1.send_keys(keys_combo)
-        logger.info(f"[{test_context}] new tab for item 1")
-
-        driver.switch_to.window(driver.window_handles[1])
-        logger.info(f"[{test_context}] switch driver focus on the new tab")
-
-        laptops_page_obj.select_amount_of_items(4)
-        logger.info(f"[{test_context}] selected amount of items: 4")
-
-        laptops_page_obj.click_add_to_cart()
-        logger.info(f"[{test_context}] items added to cart")
-
-        driver.close()  # close current tab
-        logger.info(f"[{test_context}] tab is closed")
-
-        driver.switch_to.window(driver.window_handles[0])
-        logger.info(f"[{test_context}] switch focus back to main tab page")
-        # -------------------------------------------------------------------------------------------->
-        button_2.send_keys(keys_combo)
-        logger.info(f"[{test_context}] new tab for item 2")
-
-        driver.switch_to.window(driver.window_handles[1])
-        logger.info(f"[{test_context}] switch focus back to item tab ")
-
-        laptops_page_obj.select_amount_of_items(3)
-        logger.info(f"[{test_context}] selected amount of items: 3")
-
-        laptops_page_obj.click_add_to_cart()
-        logger.info(f"[{test_context}] items added to cart")
-
-        driver.close()
-        logger.info(f"[{test_context}] tab is closed")
-
-        driver.switch_to.window(driver.window_handles[0])  # switch focus back to main page
-        logger.info(f"[{test_context}] switch focus back to main tab page")
-        # -------------------------------------------------------------------------------------------->
-        button_3.send_keys(keys_combo)
-        logger.info(f"[{test_context}] new tab for item 3")
-        driver.switch_to.window(driver.window_handles[1])
-        logger.info(f"[{test_context}] switch focus back to item tab ")
-        laptops_page_obj.select_amount_of_items(1)
-        logger.info(f"[{test_context}] selected amount of items: 1")
-        laptops_page_obj.click_add_to_cart()
-        logger.info(f"[{test_context}] items added to cart")
-        driver.close()
-        logger.info(f"[{test_context}] tab is closed")
-        driver.switch_to.window(driver.window_handles[0])
-        logger.info(f"[{test_context}] switch focus back to main tab page")
-        # -------------------------------------------------------------------------------------------->
-
+        # now view cart and assert
         laptops_page_obj.click_shopping_cart()
-        logger.info(f"[{test_context}] click_shopping_cart")
 
-        items_amount = shopping_cart_obj.get_amount_of_items_in_cart()
-        logger.info(f"[{test_context}] {items_amount=}")
-
+        count = shopping_cart_obj.get_amount_of_items_in_cart()
         expected_item_types = 3
         logger.info(f"[{test_context}] {expected_item_types=}")
-        assert items_amount == expected_item_types
+        assert count == expected_item_types
 
     except Exception as e:
         capture_screenshot(driver, request)

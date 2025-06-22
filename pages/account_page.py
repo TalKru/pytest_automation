@@ -17,10 +17,10 @@ class AccountPage:
         self.wait = wait
 
     def click_logout(self):
-        logout_btn = self.wait.until(EC.element_to_be_clickable(*self.btn_logout))
+        logout_btn = self.wait.until(EC.element_to_be_clickable(self.btn_logout))
         logout_btn.click()
 
     def get_logout_text(self):
-        return self.wait.until(EC.element_to_be_clickable(*self.text_logout_msg)).text
+        return self.wait.until(EC.element_to_be_clickable(self.text_logout_msg)).text
 
 

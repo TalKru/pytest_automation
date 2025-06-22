@@ -16,7 +16,7 @@ class CheckoutPage:
         self.wait = wait
 
     def click_currency_btn(self):
-        element = self.wait.until(EC.visibility_of_element_located(*self.dropdown_currency))
+        element = self.wait.until(EC.visibility_of_element_located(self.dropdown_currency))
         element.click()
 
     def get_list_of_currency_options(self) -> list[str]:
@@ -26,7 +26,7 @@ class CheckoutPage:
         """
         # self.click_currency_btn() # assume it happened!
         currency_options = []
-        menu_element = self.wait.until(EC.visibility_of_all_elements_located(*self.dropdown_options))
+        menu_element = self.wait.until(EC.visibility_of_all_elements_located(self.dropdown_options))
 
         for currency_option in menu_element:
             if currency_option is not None:
