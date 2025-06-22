@@ -18,7 +18,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 # ---------------------------------------------------------------------------------------------------------- #
 # conftest is imported seamlessly by pytest
 import time
-import requests
 
 
 # @pytest.mark.skip

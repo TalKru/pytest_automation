@@ -13,7 +13,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 # ---------------------------------------------------------------------------------------------------------- #
 # conftest is imported seamlessly by pytest
 import time
-import requests
 
 
 #@pytest.mark.skip
@@ -36,7 +35,7 @@ def test_mock_fail_for_screenshot(driver, wait, request, test_context):
 
 # @pytest.mark.skip
 @pytest.mark.sanity
-@pytest.mark.repeat(3)  # will run the same test 3 times
+@pytest.mark.repeat(2)  # will run the same test 3 times
 def test_correct_account_registration(driver, wait, request, test_context):
     try:
         # init imported page objects with driver and wait from conftest

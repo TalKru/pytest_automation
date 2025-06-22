@@ -16,9 +16,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 # ---------------------------------------------------------------------------------------------------------- #
 # conftest is imported seamlessly by pytest
 import time
-import requests
 
 
+@pytest.mark.smoke
 def test_currency_options(driver, wait, request, test_context):
     """
         Test Case: check if all currency options are available

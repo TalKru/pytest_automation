@@ -15,11 +15,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 # ---------------------------------------------------------------------------------------------------------- #
 # conftest is imported seamlessly by pytest
 import time
-import requests
 
 
 # @pytest.mark.skip
 @pytest.mark.sanity
+@pytest.mark.smoke
 def test_correct_login(driver, wait, request, test_context):
     try:
         home_page_obj = HomePage(driver, wait)
@@ -41,6 +41,7 @@ def test_correct_login(driver, wait, request, test_context):
         logger.info(f"[{test_context}] typed password: {password_txt}")
 
         login_page_obj.click_login()
+        logger.info(f"[{test_context}] clicked login...")
         assert login_page_obj.is_my_account_page_exists()
 
     except Exception as e:
