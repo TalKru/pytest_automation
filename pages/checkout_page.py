@@ -6,19 +6,17 @@ from selenium.webdriver import ActionChains, Keys
 
 
 class CheckoutPage:
-    # locators
     # url = "https://naveenautomationlabs.com/opencart/"
-    dropdown_currency_xpath = "//form[@id='form-currency']"  # "//span[normalize-space()='Currency']"
-    dropdown_options_xpath = "//ul[@class='dropdown-menu']/li/button"
-    text_currency_type_xpath = "//span[@id='cart-total']"  # also items amount count
+    dropdown_currency = (By.XPATH, "//form[@id='form-currency']")  # "//span[normalize-space()='Currency']"
+    dropdown_options = (By.XPATH, "//ul[@class='dropdown-menu']/li/button")
+    text_currency_type = (By.XPATH, "//span[@id='cart-total']")   # also items amount count
 
     def __init__(self, driver: webdriver, wait: WebDriverWait):
         self.driver = driver
         self.wait = wait
 
     def click_currency_btn(self):
-        tup = (By.XPATH, self.dropdown_currency_xpath)
-        element = self.wait.until(EC.visibility_of_element_located(tup))
+        element = self.wait.until(EC.visibility_of_element_located(*self.dropdown_currency))
         element.click()
 
     def get_list_of_currency_options(self) -> list[str]:
@@ -28,16 +26,30 @@ class CheckoutPage:
         """
         # self.click_currency_btn() # assume it happened!
         currency_options = []
-        tup = (By.XPATH, self.dropdown_options_xpath)
-        menu_element = self.wait.until(EC.visibility_of_all_elements_located(tup))
+        menu_element = self.wait.until(EC.visibility_of_all_elements_located(*self.dropdown_options))
 
         for currency_option in menu_element:
-            # currency_options.append(currency_option.get_attribute("name")) # ['EUR', 'GBP', 'USD']
-            currency_options.append(currency_option.text)                    # ['€ Euro', '£ Pound Sterling', '$ US Dollar']
+            if currency_option is not None:
+                # currency_options.append(currency_option.get_attribute("name")) # ['EUR', 'GBP', 'USD']
+                currency_options.append(currency_option.text)  # ['€ Euro', '£ Pound Sterling', '$ US Dollar']
         return currency_options
 
 
+"""
+1. Correct XPath for Options:
+self.dropdown_options_xpath = "//ul[@class='dropdown-menu']/li/button": This is the critical change. 
+Instead of targeting the <ul> element, this XPath targets all the **<button>** elements 
+that are direct children of <li> elements, which are themselves children of the <ul> with class='dropdown-menu'. 
+These are the actual clickable elements containing the text.
 
+2. visibility_of_all_elements_located is used correctly:
+Now, options_elements will be a list of all the button WebElements, which is what you want to iterate over.
+
+3. Extracting the Correct Value:
+name_attribute = option_element.get_attribute("name"): This will correctly retrieve the name attribute 
+(e.g., "EUR", "GBP", "USD") from each <button> element.
+If you need the visible text like "€ Euro", you would use option_element.text. 
+"""
 
 
 

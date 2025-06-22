@@ -38,7 +38,7 @@ def wait(driver, wait_time_sec=10) -> WebDriverWait:
     return wait
 
 
-# ==============================[Add test suite name and test tame for each logger]=================================
+# ==============================[Add test suite/name/iteration for each log msg]=================================
 def get_test_context(request) -> str:
     """
     Returns a string with the test context based on request.node.nodeid.
