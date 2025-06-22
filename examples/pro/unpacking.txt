@@ -1,0 +1,88 @@
+
+---
+
+## ✅ The Root of the Confusion
+
+You’re observing two different **APIs**:
+
+| Usage                                             | Type                 | Arguments Expected     | Example              |
+| ------------------------------------------------- | -------------------- | ---------------------- | -------------------- |
+| `driver.find_element(By.ID, "abc")`               | Selenium core API    | 2 positional arguments | `By.ID, "username"`  |
+| `wait.until(EC.element_to_be_clickable(locator))` | `WebDriverWait` + EC | 1 **tuple** locator    | `("id", "username")` |
+
+So the **difference is:**
+
+* `driver.find_element()` takes **two separate arguments** (`by`, `value`).
+* `EC.*` methods take **a single locator tuple** — usually passed from your Page Object.
+
+---
+
+## 🤯 Why the `*` is Needed
+
+The `*` is used to **unpack a tuple** into separate arguments.
+
+Let’s say you define this in your Page Object:
+
+```python
+LOGIN_BUTTON = (By.ID, "login-btn")
+```
+
+Then:
+
+### If you're calling Selenium directly:
+
+```python
+driver.find_element(*LOGIN_BUTTON)   # Unpacks to: driver.find_element(By.ID, "login-btn")
+```
+
+### If you're calling an Expected Condition:
+
+```python
+wait.until(EC.element_to_be_clickable(LOGIN_BUTTON))  # Pass tuple directly (no unpacking)
+```
+
+---
+
+## 🧠 Mental Model Trick
+
+Here's how to think of it **simply**:
+
+### 1. **Selenium functions** (`find_element`, `find_elements`) → expect 2 arguments:
+
+```python
+find_element(by_strategy, value)  # e.g., (By.XPATH, "//button")
+```
+
+### 2. **Expected Conditions** → expect 1 argument: a `(by, value)` **tuple**
+
+```python
+EC.presence_of_element_located((By.ID, "some-id"))  # tuple only
+```
+
+So:
+
+* **Use `*locator`** when calling Selenium APIs.
+* **Use `locator` as-is** when calling `EC.*` conditions.
+
+---
+
+## ✅ Quick Tip You Can Use in Practice
+
+To stay consistent in Page Objects:
+
+```python
+# Define all locators as tuples
+LOGIN_BTN = (By.ID, "login")
+
+# When calling:
+driver.find_element(*LOGIN_BTN)                    # for raw Selenium
+wait.until(EC.element_to_be_clickable(LOGIN_BTN)) # for wait conditions
+```
+
+So the rule becomes:
+
+> ✅ "Always define locators as tuples. Use `*locator` only when needed by Selenium's core methods."
+
+---
+
+Let me know if you'd like a short cheat-sheet or utility functions to abstract this completely.
