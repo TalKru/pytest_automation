@@ -1,3 +1,5 @@
+import time
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -14,6 +16,8 @@ class HomePage:
     btn_checkout = (By.XPATH, "//a[@title='Checkout']")
     btn_laptops_dropdown = (By.XPATH, "//a[normalize-space()='Laptops & Notebooks']")
     btn_laptops_menu = (By.XPATH, "//a[normalize-space()='Show All Laptops & Notebooks']")
+    dropdown_mp3_menu = (By.XPATH, "//a[text()='MP3 Players']")
+    btn_mp3_page = (By.XPATH, "//a[text()='Show All MP3 Players']")
 
     def __init__(self, driver: webdriver, wait: WebDriverWait):
         self.driver = driver  # build the obj with driver obj from the test case
@@ -40,11 +44,19 @@ class HomePage:
         checkout_btn.click()
 
     def click_laptops_dropdown_options(self):
-        checkout_btn = self.wait.until(EC.element_to_be_clickable(self.btn_laptops_dropdown))
-        checkout_btn.click()
+        dropdown = self.wait.until(EC.element_to_be_clickable(self.btn_laptops_dropdown))
+        dropdown.click()
 
     def click_laptops_menu(self):
-        checkout_btn = self.wait.until(EC.element_to_be_clickable(self.btn_laptops_menu))
-        checkout_btn.click()
+        laptops_btn = self.wait.until(EC.element_to_be_clickable(self.btn_laptops_menu))
+        laptops_btn.click()
+
+    def click_mp3_menu(self):
+        dropdown_players_btn = self.wait.until(EC.element_to_be_clickable(self.dropdown_mp3_menu))
+        dropdown_players_btn.click()
+        time.sleep(0.1)
+
+        btn_player_page = self.wait.until(EC.element_to_be_clickable(self.btn_mp3_page))
+        btn_player_page.click()
 
 

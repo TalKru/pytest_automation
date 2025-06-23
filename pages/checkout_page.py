@@ -10,10 +10,15 @@ class CheckoutPage:
     dropdown_currency = (By.XPATH, "//form[@id='form-currency']")  # "//span[normalize-space()='Currency']"
     dropdown_options = (By.XPATH, "//ul[@class='dropdown-menu']/li/button")
     text_currency_type = (By.XPATH, "//span[@id='cart-total']")   # also items amount count
+    text_empty_cart_msg = (By.XPATH, "//div[@id='content']/p")
 
     def __init__(self, driver: webdriver, wait: WebDriverWait):
         self.driver = driver
         self.wait = wait
+
+    def get_empty_cart_msg(self) -> str:
+        element = self.wait.until(EC.visibility_of_element_located(self.text_empty_cart_msg))
+        return element.text.strip()
 
     def click_currency_btn(self):
         element = self.wait.until(EC.visibility_of_element_located(self.dropdown_currency))
