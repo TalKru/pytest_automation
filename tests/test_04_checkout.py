@@ -20,7 +20,7 @@ import time
 
 
 @pytest.mark.regression
-def test_add_all_mp3_to_cart_verify_total_price(driver, wait, request, test_context):
+def test_mp3_players_cart_count_and_total_price(driver, wait, request, test_context):
     """
     Test Case: Add every MP3 player on the listing page to the shopping cart,
     then verify that:

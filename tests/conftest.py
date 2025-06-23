@@ -31,10 +31,11 @@ def driver() -> webdriver.Chrome:
     driver.quit()
 
 
+# wait encapsulates your explicit-wait policy (timeout, polling interval, ignored exceptions)
+# driver.implicitly_wait(WAIT_TIME_SEC)
 @pytest.fixture(scope="function")
 def wait(driver, wait_time_sec=10) -> WebDriverWait:
     wait = WebDriverWait(driver, wait_time_sec, poll_frequency=1, ignored_exceptions=[])
-    # driver.implicitly_wait(WAIT_TIME_SEC)
     return wait
 
 
