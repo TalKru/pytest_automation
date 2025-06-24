@@ -39,7 +39,35 @@ def wait(driver, wait_time_sec=10) -> WebDriverWait:
     return wait
 
 
+"""
+@pytest.fixture
+def request():
+    # Provides:
+    # - `nodeid`: the full test identifier (e.g., "tests/test_example.py::test_example").
+    # - `addfinalizer(func)`: a no-op stub showing where teardown hooks could be registered.
+    ...
+    return DummyRequest(nodeid="tests/test_example.py::test_example")
+
+@pytest.fixture(scope="session")
+def config():
+    # Load URLs, credentials, timeouts from a config file or env vars.
+    return {
+        "base_url": os.getenv("BASE_URL", "https://myapp.example.com"),
+        "api_token": os.getenv("API_TOKEN", "secret"),
+        "timeout": 10
+    }
+
+@pytest.fixture(scope="session")
+def api_client(config):
+    # A simple HTTP client configured with your API token.
+    session = requests.Session()
+    session.headers.update({"Authorization": f"Bearer {config['api_token']}"})
+    yield session
+    session.close()
+"""
 # ==============================[Add test suite/name/iteration for each log msg]=================================
+
+
 def get_test_context(request) -> str:
     """
     Returns a string with the test context based on request.node.nodeid.
