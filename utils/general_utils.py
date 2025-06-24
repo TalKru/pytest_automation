@@ -15,7 +15,17 @@ def capture_screenshot(driver: webdriver, request) -> str:
     os.makedirs(SCREENSHOTS_DIR, exist_ok=True)
 
     # Build a safe filename from the pytest nodeid
-    filename = request.node.nodeid.replace("::", "_").replace("/", "_").replace("\\", "_") + ".png"
+    #filename = request.node.nodeid.replace("::", "_").replace("/", "_").replace("\\", "_").replace("test_", "").replace(".py", "") + ".png"
+    filename = (
+            request.node.nodeid
+            .replace("::", "_")
+            .replace("/", "_")
+            .replace("\\", "_")
+            .replace("test_", "")
+            .replace("tests_", "")
+            .replace(".py", "")
+            + ".png"
+    )
     file_path = os.path.join(SCREENSHOTS_DIR, filename)
 
     driver.save_screenshot(file_path)

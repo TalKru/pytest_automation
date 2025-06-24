@@ -10,11 +10,16 @@ from pytest_metadata.plugin import metadata_key
 # ---------------------------------------------------------------------------------------------------------- #
 import time
 from datetime import datetime
-import os
 # ---------------------------------------------------------------------------------------------------------- #
-ROOT_DIR         = os.path.abspath(os.curdir)
-SCREENSHOTS_DIR  = os.path.join(ROOT_DIR, "screenshots")
-REPORTS_BASE_DIR = os.path.join(ROOT_DIR, "reports")
+import os
+from pathlib import Path
+# resolve project root as a string once
+ROOT_DIR = str(Path(__file__).parent.parent.resolve())
+
+# define the others as strings built off ROOT_DIR
+SCREENSHOTS_DIR  = f"{ROOT_DIR}/screenshots"
+REPORTS_BASE_DIR = f"{ROOT_DIR}/reports"
+LOGS_DIR         = f"{ROOT_DIR}/logs"
 
 
 @pytest.fixture(scope="function")
@@ -118,11 +123,16 @@ def pytest_runtest_makereport(item, call):
         skipped = report.skipped and hasattr(report, "wasxfail")
         if failed or skipped:
             # 1) screenshot filename as per capture_screenshot()
-            filename = report.nodeid.replace("::", "_").replace("/", "_").replace("\\", "_") + ".png"
-
-            # 2) absolute path where we saved it
-            abs_path = os.path.join(SCREENSHOTS_DIR, filename)
-
+            filename = (
+                    report.nodeid
+                    .replace("::", "_")
+                    .replace("/", "_")
+                    .replace("\\", "_")
+                    .replace("test_", "")
+                    .replace("tests_", "")
+                    .replace(".py", "")
+                    + ".png"
+            )
             # 3) where the report HTML lives
             html_path = item.config.option.htmlpath
 
@@ -219,8 +229,9 @@ def pytest_configure(config):
     2. Creates a subfolder for the current day using the format YYYY-MM-DD.
     3. Sets config.option.htmlpath to a file in that daily folder with a timestamp in its filename.
     """
-    # Base reports folder (project_root/reports)
-    base_reports_dir = os.path.join(os.path.abspath(os.curdir), "reports")
+    #base_reports_dir = os.path.join(os.path.abspath(os.curdir), "reports")  # Base reports folder (project_root/reports)
+    base_reports_dir = REPORTS_BASE_DIR  # Base reports folder (always use our project root)
+
     os.makedirs(base_reports_dir, exist_ok=True)
 
     # Create a subfolder for the current day (YYYY-MM-DD)

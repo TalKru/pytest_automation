@@ -39,60 +39,101 @@ import os
 import sys
 from datetime import datetime
 
+# import the same ROOT_DIR you defined in conftest.py
+from tests.conftest import ROOT_DIR   # adjust path if your structure differs
+
+LOGS_DIR = os.path.join(ROOT_DIR, "logs")
+
 
 def setup_logging(log_level=logging.INFO):
     """
-    NOTE: change the log details level with -> log_level=logging.INFO
-    levels:
-    DEBUG > INFO > WARNING > ERROR > FATAL
-
-    Configures logging for the entire project.
-    - Ensures logs are saved in the "logs" directory.
-    - The log file name is based on the test suite file that was run (if available)
-      and the current date (formatted as dd_mm_yyyy).
-    - If no test suite file is found in sys.argv, defaults to 'default'.
-    This function also clears any existing logging handlers so that the new configuration is applied.
+    Configures logging for the entire project, writing into LOGS_DIR.
     """
-    # Remove any existing handlers on the root logger.
+    # clear existing handlers
     for handler in logging.root.handlers[:]:
         logging.root.removeHandler(handler)
 
-    # Create the logs directory in the project root.
-    logs_dir = os.path.join(os.getcwd(), "logs")
-    os.makedirs(logs_dir, exist_ok=True)
+    # ensure our logs folder exists under the true project root
+    os.makedirs(LOGS_DIR, exist_ok=True)
 
-    # Try to extract the test suite filename from sys.argv (e.g., "test_login.py")
-    test_suite_name = "combined_suites"  # default
+    # choose a suite name or fall back to "combined_suites"
+    test_suite_name = "combined_suites"
     for arg in sys.argv:
         if arg.endswith(".py"):
-            # Extract the basename (e.g., test_login)
-            test_suite_name = os.path.basename(arg)
-            # remove redundant parts
-            test_suite_name = test_suite_name.replace(".py", "")
-            test_suite_name = test_suite_name.replace("test_", "")
+            name = os.path.basename(arg).replace(".py", "").replace("test_", "")
+            test_suite_name = name or test_suite_name
             break
 
-    current_date = datetime.now().strftime("%d_%m_%Y")
-    # Construct the log file name, e.g., test_login_29_01_2025.log
-    log_file_name = f"{test_suite_name}_{current_date}.log"
-    log_file = os.path.join(logs_dir, log_file_name)
+    date = datetime.now().strftime("%d_%m_%Y")
+    log_file = os.path.join(LOGS_DIR, f"{test_suite_name}_{date}.log")
 
-    # Configure logging: both to file and console.
     logging.basicConfig(
         level=log_level,
         format="%(asctime)s [%(levelname)s] %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",  # This removes the milliseconds
+        datefmt="%Y-%m-%d %H:%M:%S",
         handlers=[
             logging.FileHandler(log_file),
             logging.StreamHandler()
         ]
     )
-    # Return a logger instance for this module (or use logging.getLogger() for the root logger)
     return logging.getLogger(__name__)
 
-
 # Create a global logger instance.
-logger = setup_logging() # AUTO INITIALIZED when module imported
+logger = setup_logging()  # AUTO INITIALIZED when module imported
+
+
+
+
+
+# def setup_logging(log_level=logging.INFO):
+#     """
+#     NOTE: change the log details level with -> log_level=logging.INFO
+#     levels:
+#     DEBUG > INFO > WARNING > ERROR > FATAL
+#
+#     Configures logging for the entire project.
+#     - Ensures logs are saved in the "logs" directory.
+#     - The log file name is based on the test suite file that was run (if available)
+#       and the current date (formatted as dd_mm_yyyy).
+#     - If no test suite file is found in sys.argv, defaults to 'default'.
+#     This function also clears any existing logging handlers so that the new configuration is applied.
+#     """
+#     # Remove any existing handlers on the root logger.
+#     for handler in logging.root.handlers[:]:
+#         logging.root.removeHandler(handler)
+#
+#     # Create the logs directory in the project root.
+#     logs_dir = os.path.join(os.getcwd(), "logs")
+#     os.makedirs(logs_dir, exist_ok=True)
+#
+#     # Try to extract the test suite filename from sys.argv (e.g., "test_login.py")
+#     test_suite_name = "combined_suites"  # default
+#     for arg in sys.argv:
+#         if arg.endswith(".py"):
+#             # Extract the basename (e.g., test_login)
+#             test_suite_name = os.path.basename(arg)
+#             # remove redundant parts
+#             test_suite_name = test_suite_name.replace(".py", "")
+#             test_suite_name = test_suite_name.replace("test_", "")
+#             break
+#
+#     current_date = datetime.now().strftime("%d_%m_%Y")
+#     # Construct the log file name, e.g., test_login_29_01_2025.log
+#     log_file_name = f"{test_suite_name}_{current_date}.log"
+#     log_file = os.path.join(logs_dir, log_file_name)
+#
+#     # Configure logging: both to file and console.
+#     logging.basicConfig(
+#         level=log_level,
+#         format="%(asctime)s [%(levelname)s] %(message)s",
+#         datefmt="%Y-%m-%d %H:%M:%S",  # This removes the milliseconds
+#         handlers=[
+#             logging.FileHandler(log_file),
+#             logging.StreamHandler()
+#         ]
+#     )
+#     # Return a logger instance for this module (or use logging.getLogger() for the root logger)
+#     return logging.getLogger(__name__)
 
 
 
