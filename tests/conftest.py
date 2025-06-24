@@ -1,4 +1,4 @@
-# ---------------------------------------------------------------------------------------------------------- #
+
 import pytest
 import pytest_html
 from selenium import webdriver
@@ -12,6 +12,9 @@ import time
 from datetime import datetime
 import os
 # ---------------------------------------------------------------------------------------------------------- #
+ROOT_DIR         = os.path.abspath(os.curdir)
+SCREENSHOTS_DIR  = os.path.join(ROOT_DIR, "screenshots")
+REPORTS_BASE_DIR = os.path.join(ROOT_DIR, "reports")
 
 
 @pytest.fixture(scope="function")
@@ -96,48 +99,95 @@ def test_context(request):
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     """
-    Pytest hook that is called after each test phase (setup, call, teardown).
-    This hook attaches a screenshot to the HTML report if a test fails.
-    It assumes that screenshots are saved in the project root folder "screenshots".
-    Since the HTML report is generated in a subfolder inside "reports" (for example, a daily folder),
-    we need to go up two levels to reference the screenshots folder:
-        <project_root>/reports/DATE/<report.html>  --> Relative path: ../../screenshots/<filename>
+    Attach screenshot to pytest-html report on failure.
+    We save all screenshots under SCREENSHOTS_DIR.
+    We compute a correct relative path from the HTML file's folder
+    (item.config.option.htmlpath) back to SCREENSHOTS_DIR.
     """
-    # Get the pytest-html plugin instance.
-    pytest_html = item.config.pluginmanager.getplugin('html')
+    # grab the html plugin
+    html_plugin = item.config.pluginmanager.getplugin("html")
 
-    # Yield to let the test run and capture its report.
+    # run the test and get the report object
     outcome = yield
-    report = outcome.get_result()
+    report  = outcome.get_result()
+    extra   = getattr(report, "extra", [])
 
-    # Retrieve any existing extra information for the report.
-    extra = getattr(report, 'extra', [])
+    # only add on actual test call or setup failure
+    if report.when in ("call", "setup"):
+        failed  = report.failed and not hasattr(report, "wasxfail")
+        skipped = report.skipped and hasattr(report, "wasxfail")
+        if failed or skipped:
+            # 1) screenshot filename as per capture_screenshot()
+            filename = report.nodeid.replace("::", "_").replace("/", "_").replace("\\", "_") + ".png"
 
-    # Process only during the 'call' or 'setup' phase.
-    if report.when in ('call', 'setup'):
-        xfail = hasattr(report, 'wasxfail')
-        # Attach screenshot if test failed (and wasn't expected to fail) or if skipped but expected to fail.
-        if (report.failed and not xfail) or (report.skipped and xfail):
-            # Build the screenshot filename exactly as in capture_screenshot().
-            screenshot_filename = f"{report.nodeid.replace('::', '_').replace('/', '_').replace('\\', '_')}.png"
+            # 2) absolute path where we saved it
+            abs_path = os.path.join(SCREENSHOTS_DIR, filename)
 
-            # Calculate the relative path from the report file to the screenshots folder.
-            # Assuming the report is in: <project_root>/reports/DATE/report.html,
-            # to get to <project_root>/screenshots, we need to go up two levels:
-            relative_path = os.path.join("..", "..", "screenshots", screenshot_filename)
-            #relative_path = os.path.join("..", "screenshots", screenshot_filename) # Define the relative path from the HTML report location (e.g., reports/report.html) to the screenshots folder at the project root.
+            # 3) where the report HTML lives
+            html_path = item.config.option.htmlpath
 
-            # Create an HTML snippet to embed the screenshot in the report.
-            html = (
-                f'<div><img src="{relative_path}" alt="screenshot" '
-                'style="width:304px;height:228px;" onclick="window.open(this.src)" align="right"/></div>'
+            # 4) compute relative from report folder back to screenshots
+            report_dir     = os.path.dirname(html_path)
+            rel_to_reports = os.path.relpath(SCREENSHOTS_DIR, report_dir)
+            rel_img_path   = os.path.join(rel_to_reports, filename)
+
+            # 5) generate the <img> tag
+            img_html = (
+                f'<div>'
+                f'  <img src="{rel_img_path}"'
+                f'       alt="screenshot"'
+                f'       style="width:304px;height:228px;"'
+                f'       onclick="window.open(this.src)"'
+                f'       align="right"/>'
+                f'</div>'
             )
-            extra.append(pytest_html.extras.html(html))
+            extra.append(html_plugin.extras.html(img_html))
 
-    # Set the extra info back on the report.
-    report.extras = extra  # report.extra = extra  # attribute is deprecated?
+    report.extra = extra
 
 
+# @pytest.hookimpl(hookwrapper=True)
+# def pytest_runtest_makereport(item, call):
+#     """
+#     Pytest hook that is called after each test phase (setup, call, teardown).
+#     This hook attaches a screenshot to the HTML report if a test fails.
+#     It assumes that screenshots are saved in the project root folder "screenshots".
+#     Since the HTML report is generated in a subfolder inside "reports" (for example, a daily folder),
+#     we need to go up two levels to reference the screenshots folder:
+#         <project_root>/reports/DATE/<report.html>  --> Relative path: ../../screenshots/<filename>
+#     """
+#     # Get the pytest-html plugin instance.
+#     pytest_html = item.config.pluginmanager.getplugin('html')
+#
+#     # Yield to let the test run and capture its report.
+#     outcome = yield
+#     report = outcome.get_result()
+#
+#     # Retrieve any existing extra information for the report.
+#     extra = getattr(report, 'extra', [])
+#
+#     # Process only during the 'call' or 'setup' phase.
+#     if report.when in ('call', 'setup'):
+#         xfail = hasattr(report, 'wasxfail')
+#         # Attach screenshot if test failed (and wasn't expected to fail) or if skipped but expected to fail.
+#         if (report.failed and not xfail) or (report.skipped and xfail):
+#             # Build the screenshot filename exactly as in capture_screenshot().
+#             screenshot_filename = f"{report.nodeid.replace('::', '_').replace('/', '_').replace('\\', '_')}.png"
+#
+#             # Calculate the relative path from the report file to the screenshots folder.
+#             # Assuming the report is in: <project_root>/reports/DATE/report.html,
+#             # to get to <project_root>/screenshots, we need to go up two levels:
+#             relative_path = os.path.join("..", "..", "screenshots", screenshot_filename)
+#
+#             # Create an HTML snippet to embed the screenshot in the report.
+#             html = (
+#                 f'<div><img src="{relative_path}" alt="screenshot" '
+#                 'style="width:304px;height:228px;" onclick="window.open(this.src)" align="right"/></div>'
+#             )
+#             extra.append(pytest_html.extras.html(html))
+#
+#     # Set the extra info back on the report.
+#     report.extras = extra  # report.extra = extra  # attribute is deprecated?
 # ============================[Set HTML Report Path and modify report metadata]=====================================
 @pytest.hookimpl(optionalhook=True)
 def pytest_metadata(metadata):
