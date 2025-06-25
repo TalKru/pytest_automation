@@ -71,7 +71,7 @@ def test_correct_account_registration(driver, wait, request, test_context):
 
         expected_msg = "Your Account Has Been Created!"
         actual_msg = register_page_obj.get_confirm_account_msg()
-        logger.info(f"[{test_context}] test extracted from the success page: {actual_msg}")
+        logger.info(f"[{test_context}] text extracted from the success page: {actual_msg}")
         assert expected_msg in actual_msg
 
     except Exception as e:
