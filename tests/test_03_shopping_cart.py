@@ -34,11 +34,10 @@ def test_add_items_to_cart(driver, wait, request, test_context):
     Expected Result:
     - The shopping cart should contain exactly 3 different laptop types.
     """
+    home_page_obj = HomePage(driver, wait)
+    laptops_page_obj = LaptopsPage(driver, wait)
+    shopping_cart_obj = ShoppingCartPage(driver, wait)
     try:
-        home_page_obj = HomePage(driver, wait)
-        laptops_page_obj = LaptopsPage(driver, wait)
-        shopping_cart_obj = ShoppingCartPage(driver, wait)
-
         driver.get(DATA.get_home_url())
         logger.info(f"[{test_context}] loaded page url")
 
@@ -49,15 +48,15 @@ def test_add_items_to_cart(driver, wait, request, test_context):
 
         # open each item in new tab, set qty & add to cart
         laptops_page_obj.open_item_new_tab_add_close(LaptopsPage.linktext_item_MacBook, amount=4)
-        logger.info("Added MacBook x4")
+        logger.info(f"[{test_context}] Added *MacBook*, amount=4")
         time.sleep(0.2)
 
         laptops_page_obj.open_item_new_tab_add_close(LaptopsPage.linktext_item_HPLP3065, amount=3)
-        logger.info("Added HP LP3065 x3")
+        logger.info(f"[{test_context}] Added *HP LP3065*, amount=3")
         time.sleep(0.2)
 
         laptops_page_obj.open_item_new_tab_add_close(LaptopsPage.linktext_item_SonyVAIO, amount=1)
-        logger.info("Added Sony VAIO x1")
+        logger.info(f"[{test_context}] Added *Sony VAIO*, amount=1")
         time.sleep(0.2)
 
         # now view cart and assert
@@ -86,11 +85,10 @@ def test_remove_item_from_cart(driver, wait, request, test_context):
     Expected Result:
     - The cart should have 0 items after removal.
     """
+    home_page_obj = HomePage(driver, wait)
+    laptops_page_obj = LaptopsPage(driver, wait)
+    shopping_cart_obj = ShoppingCartPage(driver, wait)
     try:
-        home_page_obj = HomePage(driver, wait)
-        laptops_page_obj = LaptopsPage(driver, wait)
-        shopping_cart_obj = ShoppingCartPage(driver, wait)
-
         # 1. Navigate to home, then open laptops
         driver.get(DATA.get_home_url())
         logger.info(f"[{test_context}] Loaded home page")
@@ -145,11 +143,10 @@ def test_update_item_quantity_in_cart(driver, wait, request, test_context):
     Expected Result:
     - The item's quantity in the cart should be exactly 3.
     """
+    home_page_obj = HomePage(driver, wait)
+    laptops_page_obj = LaptopsPage(driver, wait)
+    shopping_cart_obj = ShoppingCartPage(driver, wait)
     try:
-        home_page_obj = HomePage(driver, wait)
-        laptops_page_obj = LaptopsPage(driver, wait)
-        shopping_cart_obj = ShoppingCartPage(driver, wait)
-
         # 1. Navigate to home, open laptops
         driver.get(DATA.get_home_url())
         logger.info(f"[{test_context}] Loaded home page")

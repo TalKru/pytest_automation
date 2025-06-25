@@ -17,10 +17,9 @@ import time
 
 #@pytest.mark.skip
 def test_mock_fail_for_screenshot(driver, wait, request, test_context):
+    home_page_obj = HomePage(driver, wait)
     try:
         logger.warning(f"[{test_context}] This test case is an example FAIL for a screenshot")
-        home_page_obj = HomePage(driver, wait)
-        logger.info(f"[{test_context}] Init page objects for the test case")
         driver.get(DATA.get_home_url())
         logger.info(f"[{test_context}] loaded page url")
         home_page_obj.click_my_account()
@@ -37,10 +36,9 @@ def test_mock_fail_for_screenshot(driver, wait, request, test_context):
 @pytest.mark.sanity
 @pytest.mark.repeat(2)  # will run the same test 3 times
 def test_correct_account_registration(driver, wait, request, test_context):
+    home_page_obj = HomePage(driver, wait)
+    register_page_obj = RegisterPage(driver, wait)
     try:
-        # init imported page objects with driver and wait from conftest
-        home_page_obj = HomePage(driver, wait)
-        register_page_obj = RegisterPage(driver, wait)
         logger.info(f"[{test_context}] Init page objects for the test case")
 
         driver.get(DATA.get_home_url())  # read the URL from config.ini file using utils.read_config_data.py module
@@ -84,9 +82,9 @@ def test_correct_account_registration(driver, wait, request, test_context):
 @pytest.mark.regression
 @pytest.mark.repeat(1)
 def test_missing_agreement_checkbox_error_msg(driver, wait, request, test_context):
+    home_page_obj = HomePage(driver, wait)
+    register_page_obj = RegisterPage(driver, wait)
     try:
-        home_page_obj = HomePage(driver, wait)
-        register_page_obj = RegisterPage(driver, wait)
         logger.info(f"[{test_context}] Init page objects for the test case")
 
         driver.get(DATA.get_home_url())
@@ -126,9 +124,9 @@ def test_missing_agreement_checkbox_error_msg(driver, wait, request, test_contex
 @pytest.mark.regression
 @pytest.mark.repeat(2)
 def test_passwords_mismatch_on_registration(driver, wait, request, test_context):
+    home_page_obj = HomePage(driver, wait)
+    register_page_obj = RegisterPage(driver, wait)
     try:
-        home_page_obj = HomePage(driver, wait)
-        register_page_obj = RegisterPage(driver, wait)
         logger.info(f"[{test_context}] Init page objects for the test case")
 
         driver.get(DATA.get_home_url())

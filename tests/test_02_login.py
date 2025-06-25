@@ -21,9 +21,9 @@ import time
 @pytest.mark.sanity
 @pytest.mark.smoke
 def test_correct_login(driver, wait, request, test_context):
+    home_page_obj = HomePage(driver, wait)
+    login_page_obj = LoginPage(driver, wait)
     try:
-        home_page_obj = HomePage(driver, wait)
-        login_page_obj = LoginPage(driver, wait)
         logger.info(f"[{test_context}] Init page objects for the test case")
         driver.get(DATA.get_home_url())
         logger.info(f"[{test_context}] loaded page url")
@@ -53,9 +53,9 @@ def test_correct_login(driver, wait, request, test_context):
 # @pytest.mark.skip
 @pytest.mark.regression
 def test_invalid_login(driver, wait, request, test_context):
+    home_page_obj = HomePage(driver, wait)
+    login_page_obj = LoginPage(driver, wait)
     try:
-        home_page_obj = HomePage(driver, wait)
-        login_page_obj = LoginPage(driver, wait)
         logger.info(f"[{test_context}] Init page objects for the test case")
         driver.get(DATA.get_home_url())
         logger.info(f"[{test_context}] loaded page url")
@@ -85,10 +85,10 @@ def test_invalid_login(driver, wait, request, test_context):
 # @pytest.mark.skip
 @pytest.mark.sanity
 def test_correct_logout(driver, wait, request, test_context):
+    home_page_obj = HomePage(driver, wait)
+    login_page_obj = LoginPage(driver, wait)
+    logout_page_obj = AccountPage(driver, wait)
     try:
-        home_page_obj = HomePage(driver, wait)
-        login_page_obj = LoginPage(driver, wait)
-        logout_page_obj = AccountPage(driver, wait)
         logger.info(f"[{test_context}] Init page objects for the test case")
         driver.get(DATA.get_home_url())
         logger.info(f"[{test_context}] loaded page url")
@@ -120,10 +120,10 @@ def test_correct_logout(driver, wait, request, test_context):
 
 @pytest.mark.sanity
 def test_continue_to_registration(driver, wait, request, test_context):
+    home_page_obj = HomePage(driver, wait)
+    login_page_obj = LoginPage(driver, wait)
+    register_page_obj = RegisterPage(driver, wait)
     try:
-        home_page_obj = HomePage(driver, wait)
-        login_page_obj = LoginPage(driver, wait)
-        register_page_obj = RegisterPage(driver, wait)
         logger.info(f"[{test_context}] Init page objects for the test case")
         driver.get(DATA.get_home_url())
         logger.info(f"[{test_context}] loaded page url")
@@ -146,5 +146,31 @@ def test_continue_to_registration(driver, wait, request, test_context):
         pytest.fail(f"Test failed due to: {e}")
 
 
+@pytest.mark.regression
+def test_forgot_password_transfer(driver, wait, request, test_context):
+    home_page_obj = HomePage(driver, wait)
+    login_page_obj = LoginPage(driver, wait)
+    try:
+        logger.info(f"[{test_context}] Init page objects for the test case")
+        driver.get(DATA.get_home_url())
+        logger.info(f"[{test_context}] loaded page url")
+
+        home_page_obj.click_my_account()
+        logger.info(f"[{test_context}] clicked my account")
+        home_page_obj.click_login()
+        logger.info(f"[{test_context}] clicked login")
+
+        login_page_obj.click_forgot_password()
+        logger.info(f"[{test_context}] clicked forgot password")
+
+        page_title: str = driver.title
+        logger.info(f"[{test_context}] page title collected = {page_title}")
+
+        assert page_title == "Forgot Your Password?"
+
+    except Exception as e:
+        capture_screenshot(driver, request)
+        logger.error(f"[{test_context}] test failed: {e}")
+        pytest.fail(f"Test failed due to: {e}")
 
 

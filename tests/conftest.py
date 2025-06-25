@@ -47,32 +47,6 @@ def wait(driver, wait_time_sec=10) -> WebDriverWait:
     return wait
 
 
-"""
-@pytest.fixture
-def request():
-    # Provides:
-    # - `nodeid`: the full test identifier (e.g., "tests/test_example.py::test_example").
-    # - `addfinalizer(func)`: a no-op stub showing where teardown hooks could be registered.
-    ...
-    return DummyRequest(nodeid="tests/test_example.py::test_example")
-
-@pytest.fixture(scope="session")
-def config():
-    # Load URLs, credentials, timeouts from a config file or env vars.
-    return {
-        "base_url": os.getenv("BASE_URL", "https://myapp.example.com"),
-        "api_token": os.getenv("API_TOKEN", "secret"),
-        "timeout": 10
-    }
-
-@pytest.fixture(scope="session")
-def api_client(config):
-    # A simple HTTP client configured with your API token.
-    session = requests.Session()
-    session.headers.update({"Authorization": f"Bearer {config['api_token']}"})
-    yield session
-    session.close()
-"""
 # ==============================[Add test suite/name/iteration for each log msg]=================================
 
 
@@ -109,18 +83,33 @@ def pytest_runtest_makereport(item, call):
     We compute a correct relative path from the HTML file's folder
     (item.config.option.htmlpath) back to SCREENSHOTS_DIR.
     """
-    # grab the html plugin
+    # get an active instance of the pytest-html plugin.
+    # This allows us to use its specific helper functions.
     html_plugin = item.config.pluginmanager.getplugin("html")
 
-    # run the test and get the report object
+    # 'yield' allows us to wait for the test to finish and then
+    # inspect its result to decide if we need to take further action as a screenshot to the report.
     outcome = yield
-    report  = outcome.get_result()
-    extra   = getattr(report, "extra", [])
 
-    # only add on actual test call or setup failure
+    # We get the standard 'report' object from the 'outcome' object.
+    # 'report' object contains all the info about test result (passed, failed, name, duration...)
+    report = outcome.get_result()
+
+    # 'report.extra' is a list used by pytest-html to store extra content
+    # (like images or links) for a test's row in the HTML report.
+    # 'getattr(report, "extra", [])' safely gets this list if it exists,
+    extra = getattr(report, "extra", [])
+
+    # add screenshots only for failures that happen during test's 'setup' phase or the 'call' phase
+    # (the actual 'test_...' function fails). We ignore the 'teardown' phase.
     if report.when in ("call", "setup"):
-        failed  = report.failed and not hasattr(report, "wasxfail")
-        skipped = report.skipped and hasattr(report, "wasxfail")
+
+        # This boolean flag checks if the test truly failed. 'report.failed' is True for a failure.
+        # 'not hasattr(report, "wasxfail")' ensures this isn't a test that was *expected* to fail.
+        failed: bool = report.failed and not hasattr(report, "wasxfail")
+
+        # This flag checks if a test marked as 'xfail' was skipped.
+        skipped: bool = report.skipped and hasattr(report, "wasxfail")
         if failed or skipped:
             # 1) screenshot filename as per capture_screenshot()
             filename = (
@@ -141,7 +130,7 @@ def pytest_runtest_makereport(item, call):
             rel_to_reports = os.path.relpath(SCREENSHOTS_DIR, report_dir)
             rel_img_path   = os.path.join(rel_to_reports, filename)
 
-            # 5) generate the <img> tag
+            # 5) Generate the HTML snippet for the screenshot image
             img_html = (
                 f'<div>'
                 f'  <img src="{rel_img_path}"'
@@ -151,73 +140,26 @@ def pytest_runtest_makereport(item, call):
                 f'       align="right"/>'
                 f'</div>'
             )
+            # Add the HTML snippet to the report's 'extra' content
             extra.append(html_plugin.extras.html(img_html))
-
+    # Assign modified 'extra' list back to the report object to ensures it gets included in the HTML file.
     report.extra = extra
 
 
-# @pytest.hookimpl(hookwrapper=True)
-# def pytest_runtest_makereport(item, call):
-#     """
-#     Pytest hook that is called after each test phase (setup, call, teardown).
-#     This hook attaches a screenshot to the HTML report if a test fails.
-#     It assumes that screenshots are saved in the project root folder "screenshots".
-#     Since the HTML report is generated in a subfolder inside "reports" (for example, a daily folder),
-#     we need to go up two levels to reference the screenshots folder:
-#         <project_root>/reports/DATE/<report.html>  --> Relative path: ../../screenshots/<filename>
-#     """
-#     # Get the pytest-html plugin instance.
-#     pytest_html = item.config.pluginmanager.getplugin('html')
-#
-#     # Yield to let the test run and capture its report.
-#     outcome = yield
-#     report = outcome.get_result()
-#
-#     # Retrieve any existing extra information for the report.
-#     extra = getattr(report, 'extra', [])
-#
-#     # Process only during the 'call' or 'setup' phase.
-#     if report.when in ('call', 'setup'):
-#         xfail = hasattr(report, 'wasxfail')
-#         # Attach screenshot if test failed (and wasn't expected to fail) or if skipped but expected to fail.
-#         if (report.failed and not xfail) or (report.skipped and xfail):
-#             # Build the screenshot filename exactly as in capture_screenshot().
-#             screenshot_filename = f"{report.nodeid.replace('::', '_').replace('/', '_').replace('\\', '_')}.png"
-#
-#             # Calculate the relative path from the report file to the screenshots folder.
-#             # Assuming the report is in: <project_root>/reports/DATE/report.html,
-#             # to get to <project_root>/screenshots, we need to go up two levels:
-#             relative_path = os.path.join("..", "..", "screenshots", screenshot_filename)
-#
-#             # Create an HTML snippet to embed the screenshot in the report.
-#             html = (
-#                 f'<div><img src="{relative_path}" alt="screenshot" '
-#                 'style="width:304px;height:228px;" onclick="window.open(this.src)" align="right"/></div>'
-#             )
-#             extra.append(pytest_html.extras.html(html))
-#
-#     # Set the extra info back on the report.
-#     report.extras = extra  # report.extra = extra  # attribute is deprecated?
 # ============================[Set HTML Report Path and modify report metadata]=====================================
 @pytest.hookimpl(optionalhook=True)
 def pytest_metadata(metadata):
     """ remove data fields from the report opening"""
-    metadata.pop("Plugins", None)
-    metadata.pop("Platform", None)
-    metadata.pop("Python", None)
+    # metadata.pop("Plugins", None)
+    # metadata.pop("Python", None)
+    metadata.pop("Platform", None)                                  # remove metadata
+    metadata.pop("JAVA_HOME", None)                                 # remove metadata
+    metadata['Project'] = 'My Awesome Automation project (Tal K.)'  # add metadata
 
 
 def pytest_html_report_title(report):
     """ edit the main Title """
-    report.title = "Pytest-HTML Automation Report (TAL)"
-
-# NOTE: conflict issue, currently not working!
-# will work only the other pytest_configure() will be removed
-# def pytest_configure(config):
-#     # adds meta-data fields to the report opening
-#     config._metadata["TITLE_TEXT_1"] = 'EDIT_YOUR_TEXT'
-#     config._metadata["TITLE_TEXT_2"] = 'EDIT_YOUR_TEXT'
-#     config._metadata["TITLE_TEXT_3"] = 'EDIT_YOUR_TEXT'
+    report.title = "QA Automation Report (TAL)"
 
 
 @pytest.hookimpl(tryfirst=True)
@@ -229,7 +171,6 @@ def pytest_configure(config):
     2. Creates a subfolder for the current day using the format YYYY-MM-DD.
     3. Sets config.option.htmlpath to a file in that daily folder with a timestamp in its filename.
     """
-    #base_reports_dir = os.path.join(os.path.abspath(os.curdir), "reports")  # Base reports folder (project_root/reports)
     base_reports_dir = REPORTS_BASE_DIR  # Base reports folder (always use our project root)
 
     os.makedirs(base_reports_dir, exist_ok=True)
@@ -247,52 +188,31 @@ def pytest_configure(config):
     config.option.htmlpath = html_report_file
 
 
-# ---------------------------------------------------------------------
-# locator_tuple = (By.ID, 'start-date')
-# element = wait.until(EC.element_to_be_clickable(locator_tuple))
-# ActionChains(driver).move_to_element(element).click().perform()
-# ---------------------------------------------------------------------
-# element = driver.find_element(By.ID, 'start-date')
-# element.click()
-# ---------------------------------------------------------------------
 
+# ============================[examples]=====================================
+"""
+@pytest.fixture
+def request():
+    # Provides:
+    # - `nodeid`: the full test identifier (e.g., "tests/test_example.py::test_example").
+    # - `addfinalizer(func)`: a no-op stub showing where teardown hooks could be registered.
+    ...
+    return DummyRequest(nodeid="tests/test_example.py::test_example")
 
-# ============================[older versions, might be usful for debug]=====================================
+@pytest.fixture(scope="session")
+def config():
+    # Load URLs, credentials, timeouts from a config file or env vars.
+    return {
+        "base_url": os.getenv("BASE_URL", "https://myapp.example.com"),
+        "api_token": os.getenv("API_TOKEN", "secret"),
+        "timeout": 10
+    }
 
-# @pytest.hookimpl(hookwrapper=True)
-# def pytest_runtest_makereport(item, call):
-#     now = datetime.now()
-#     pytest_html = item.config.pluginmanager.getplugin('html')
-#     outcome = yield
-#     report = outcome.get_result()
-#     extra = getattr(report, 'extra', [])
-#     if report.when == 'call' or report.when == "setup":
-#         xfail = hasattr(report, 'wasxfail')
-#         if (report.skipped and xfail) or (report.failed and not xfail):
-#             file_name = report.nodeid.replace("::", "_") + ".png"
-#             # file_name = "screenshot" + now.strftime("%S%H%d%m%Y") + ".png"
-#             # driver.get_screenshot_as_file(file_name)
-#             if file_name:
-#                 html = '<div><img src="%s" alt="screenshot" style="width:304px;height:228px;" ' \
-#                        'onclick="window.open(this.src)" align="right"/></div>' % file_name
-#                 extra.append(pytest_html.extras.html(html))
-#         report.extra = extra
-
-
-# @pytest.hookimpl(tryfirst=True)
-# def pytest_configure(config):
-#     now = datetime.now()
-#     report_dir = os.path.join('reports', now.strftime("%S%H%d%m%Y"))
-#     report_dir.mkdir(parents=True, exist_ok=True)
-#     pytest_html = report_dir / f"report_{now.strftime('%H%M%S')}.html"
-#     config.option.htmlpath = pytest_html
-#     config.option.self_contained_html = True
-
-# ==============================[Add test suite name and test tame for each logger]=================================
-# def get_test_context(request) -> str:
-#     """
-#     Returns a string with the test context (test file and test case name)
-#     based on the request.node.nodeid.
-#     Example output: "tests_test_example_py_test_login"
-#     """
-#     return request.node.nodeid.replace("::", "_").replace("/", "_").replace("\\", "_")
+@pytest.fixture(scope="session")
+def api_client(config):
+    # A simple HTTP client configured with your API token.
+    session = requests.Session()
+    session.headers.update({"Authorization": f"Bearer {config['api_token']}"})
+    yield session
+    session.close()
+"""
